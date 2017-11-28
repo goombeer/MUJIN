@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="fMv-XG-jZD">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vDb-OB-OTi">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -531,6 +531,7 @@
                     <tabBarItem key="tabBarItem" title="設定" image="setting" id="bcE-M5-9I2"/>
                     <connections>
                         <outlet property="tableView" destination="g7b-0K-42e" id="ijn-QU-Xff"/>
+                        <outlet property="username" destination="hHJ-PS-HjM" id="9Dk-y7-xwK"/>
                         <segue destination="vDb-OB-OTi" kind="show" identifier="Singout" id="Sxl-es-DGy"/>
                     </connections>
                 </viewController>
@@ -667,6 +668,7 @@
                     <tabBarItem key="tabBarItem" title="ホーム" image="home" id="u55-dg-wUx"/>
                     <connections>
                         <outlet property="collectionView" destination="op3-Yl-apv" id="pb3-b4-RV6"/>
+                        <segue destination="eSd-V8-k9Z" kind="show" identifier="FromHome" id="9aY-ad-j4Z"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="d1u-qJ-fQ6" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -785,7 +787,7 @@
                     <tabBarItem key="tabBarItem" title="グループ" image="group" id="yQW-EX-DVw"/>
                     <connections>
                         <outlet property="collectionView" destination="91X-wI-ssw" id="Nh6-sa-cHw"/>
-                        <segue destination="w37-LF-Tlo" kind="show" identifier="Gotodetail" id="nZg-lI-D49"/>
+                        <segue destination="eSd-V8-k9Z" kind="show" identifier="FromGroup" id="qHw-Th-FAv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VlU-eT-CPJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -893,6 +895,9 @@
                                         <real key="value" value="10"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="tappedchat:" destination="w37-LF-Tlo" eventType="touchUpInside" id="CAb-7M-w6k"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -900,6 +905,12 @@
                     </view>
                     <navigationItem key="navigationItem" id="qTM-xT-QsU">
                         <barButtonItem key="backBarButtonItem" title="   " id="8FE-Uo-nyx"/>
+                        <barButtonItem key="leftBarButtonItem" title="戻る" id="TcO-Be-wSd">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <segue destination="pKK-hl-Y05" kind="unwind" unwindAction="goBacktoGrouo:" id="8w6-UA-AtM"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="amount" destination="lsx-Hc-Ary" id="O2c-9m-EbP"/>
@@ -907,12 +918,57 @@
                         <outlet property="join" destination="9QO-g2-GlU" id="xD9-q7-Iqc"/>
                         <outlet property="navigatiobar" destination="0Xs-iC-UPa" id="bOa-ht-BgB"/>
                         <outlet property="period" destination="tGH-jw-60F" id="alX-XS-Gew"/>
+                        <segue destination="NLi-qC-gF2" kind="show" identifier="Gotochat" id="bt6-D7-pRA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zqE-Mm-e52" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="pKK-hl-Y05" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="4013.5999999999999" y="-600.44977511244383"/>
+            <point key="canvasLocation" x="4892" y="-548"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Bdc-gf-zzO">
+            <objects>
+                <navigationController id="eSd-V8-k9Z" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" backIndicatorImage="　 　　" backIndicatorTransitionMaskImage="　　" id="WYy-Ti-ynX">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.99607843139999996" green="0.74509803919999995" blue="0.51372549020000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="w37-LF-Tlo" kind="relationship" relationship="rootViewController" id="7LA-OX-eCq"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0Vy-rB-YeU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4014" y="-548"/>
+        </scene>
+        <!--Title-->
+        <scene sceneID="bJL-Z8-XKv">
+            <objects>
+                <viewController id="NLi-qC-gF2" customClass="ChatViewController" customModule="MUJIN_ios" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="vJY-Dr-nCZ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <viewLayoutGuide key="safeArea" id="zUL-Lx-6zd"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Title" id="xCT-rJ-0iX">
+                        <barButtonItem key="leftBarButtonItem" title="戻る" id="1W8-aW-u9t">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <segue destination="X07-Cs-yYt" kind="unwind" unwindAction="goBacktoGrouodetail:" id="Ao2-Qq-4bD"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ddp-uC-ait" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="X07-Cs-yYt" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="5734" y="-548"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="cIG-YH-Kr5">
@@ -958,6 +1014,14 @@
                                     <action selector="logintap:" destination="vDb-OB-OTi" eventType="touchUpInside" id="uIz-JA-MtL"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DHQ-Ue-Oct">
+                                <rect key="frame" x="88" y="294" width="199" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="登録してない人はこちらから"/>
+                                <connections>
+                                    <segue destination="S44-ae-KEB" kind="show" id="EHj-cc-yMN"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <viewLayoutGuide key="safeArea" id="fsA-wg-VdR"/>
@@ -971,6 +1035,58 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8W7-sv-cvu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="608.79999999999995" y="62.518740629685162"/>
+        </scene>
+        <!--Register View Controller-->
+        <scene sceneID="UdB-VO-Iie">
+            <objects>
+                <viewController id="S44-ae-KEB" customClass="RegisterViewController" customModule="MUJIN_ios" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Un2-dx-cKP">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="UserName" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Isd-cp-fkv">
+                                <rect key="frame" x="43" y="58" width="281" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="h5O-UC-qUW">
+                                <rect key="frame" x="43" y="127" width="281" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="czZ-kW-Bb4">
+                                <rect key="frame" x="43" y="193" width="281" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4bu-t8-hDu">
+                                <rect key="frame" x="168" y="271" width="31" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="登録"/>
+                                <connections>
+                                    <action selector="register:" destination="S44-ae-KEB" eventType="touchUpInside" id="qxJ-zw-8jY"/>
+                                    <segue destination="fMv-XG-jZD" kind="show" identifier="fromregister" id="yE4-AL-CmP"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <viewLayoutGuide key="safeArea" id="PDp-9k-YlA"/>
+                    </view>
+                    <connections>
+                        <outlet property="UsernameField" destination="Isd-cp-fkv" id="DqD-KY-90p"/>
+                        <outlet property="emailField" destination="h5O-UC-qUW" id="SnD-T0-iM9"/>
+                        <outlet property="passwordField" destination="czZ-kW-Bb4" id="Gr7-96-ia1"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5z6-qp-RbW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="608.79999999999995" y="766.86656671664173"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="d6c-6I-R4t">
@@ -1004,5 +1120,11 @@
         <image name="plus" width="25" height="25"/>
         <image name="sample" width="24" height="24"/>
         <image name="setting" width="25" height="25"/>
+        <image name="　 　　" width="16" height="16"/>
+        <image name="　　" width="16" height="16"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="yE4-AL-CmP"/>
+        <segue reference="qHw-Th-FAv"/>
+    </inferredMetricsTieBreakers>
 </document>

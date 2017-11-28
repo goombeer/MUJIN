@@ -12,6 +12,7 @@ import FirebaseDatabase
 class GroupData {
     
     var ref: DatabaseReference?
+    var groupid: String?
     var name: String?
     var founder: String?
     var memberofnumber: Int?
@@ -24,6 +25,7 @@ class GroupData {
     init? (snapshot: DataSnapshot) {
         ref = snapshot.ref
         guard let dict = snapshot.value as? [String:Any] else { return nil }
+        guard let groupid  = ref?.key  else { return nil }
         guard let name  = dict["name"] as? String  else { return nil }
         guard let founder = dict["founder"]  as? String else { return nil }
         guard let memberofnumber = dict["memberofnumber"]  as? Int else { return nil }
@@ -31,15 +33,17 @@ class GroupData {
         guard let period = dict["period"]  as? String else { return nil }
         guard let message = dict["message"] as? String else { return nil }
         guard let publicnum = dict["publicnum"] as? Int else { return nil }
-
         
         self.name = name
+        self.groupid = groupid
         self.founder = founder
         self.memberofnumber = memberofnumber
         self.payment = payment
         self.period = period
         self.message = message
         self.publicnum = publicnum
+        
+      
     }
     
 }

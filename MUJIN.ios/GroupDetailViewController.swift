@@ -45,15 +45,31 @@ class GroupDetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    @IBAction func tappedchat(_ sender: UIButton) {
+        
+        performSegue(withIdentifier: "Gotochat", sender: namelabel)
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
     }
-    */
+    
+    // Segue 準備
+    override func prepare(for segue: UIStoryboardSegue, sender: Any!) {
+        if (segue.identifier == "Gotochat") {
+            guard let ChatVC = segue.destination as? ChatViewController else {
+                return
+            }
+          
+            // SubViewController のselectedImgに選択された画像を設定する
+            ChatVC.groupname = namelabel
+          
+        }
+    }
+    
+    
+    @IBAction func goBacktoGrouodetail(_ segue:UIStoryboardSegue) {
+
+        
+    }
+
+    
 
 }

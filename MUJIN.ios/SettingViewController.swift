@@ -13,7 +13,9 @@ import Firebase
 class SettingViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
     
     var user: User!
-    
+    var ref: DatabaseReference!
+    let ud = UserDefaults.standard
+
     let imageset:[UIImage] = [
         (UIImage(named:"facebook.png")?.resize(size: CGSize(width:50, height:50))!.withRenderingMode(.alwaysTemplate))!,
         (UIImage(named:"cash.png")?.resize(size: CGSize(width:50, height:50))!.withRenderingMode(.alwaysTemplate))!,
@@ -25,10 +27,21 @@ class SettingViewController: UIViewController,UITableViewDelegate,UITableViewDat
 
     @IBOutlet weak var tableView: UITableView!
     
+    @IBOutlet weak var username: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        ref = Database.database().reference()
+        let userID = Auth.auth().currentUser?.uid
+        ref.child("User").child(userID!).child("name").observeSingleEvent(of: .value, with: { (snapshot) in
+            let value = snapshot.value as? NSDictionary
+            let Username = value?["username"] as? String ?? ""
+            self.username.text = Username
+
+        }) { (error) in
+            print(error.localizedDescription)
+        }
         
-        user = Auth.auth().currentUser
         
         tableView.isScrollEnabled = false
         tableView.delegate = self
@@ -82,6 +95,12 @@ class SettingViewController: UIViewController,UITableViewDelegate,UITableViewDat
             let firebaseAuth = Auth.auth()
             do {
                 try firebaseAuth.signOut()
+                ud.removeObject(forKey: "Username")
+                ud.removeObject(forKey: "UID")
+
+                if ud.object(forKey: "Username") == nil && ud.object(forKey: "UID") == nil {
+                    print("削除完了")
+                }
                 performSegue(withIdentifier: "Singout", sender: nil)
                 print("sinnout")
             } catch let signOutError as NSError {

@@ -17,13 +17,13 @@ class GroupViewController: UIViewController,UICollectionViewDelegate,UICollectio
     
     var ref: DatabaseReference!
     var items = [GroupData]()
-    private var databaseHandle: DatabaseHandle!
     var selectedImage: UIImage?
     var selectedname: String?
     var selectedjoinnum: String?
     var selectedamount: String?
-
-    
+    let ud = UserDefaults.standard
+    let UID = UserDefaults.standard.object(forKey: "UID") as! String
+    var joingroupid: Array<String>  = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,18 +35,23 @@ class GroupViewController: UIViewController,UICollectionViewDelegate,UICollectio
         collectionView.delegate = self
         
         //データベースから取得
+        //自分が参加しているグループのID取得
+   
         ref = Database.database().reference()
-        databaseHandle = ref.child("Gruop").observe(.value, with: { (snapshot) in
-            
-            var newItems = [GroupData]()
-            
-            for itemSnapShot in snapshot.children {
-                let item = GroupData(snapshot: itemSnapShot as! DataSnapshot)
-                newItems.append(item!)
+
+        ref.child("User").child(self.UID).child("groups").observeSingleEvent(of: .value, with: { (snapshot) in
+                let array = snapshot.value as! [String:AnyObject]
+                let GroupID = array.keys
+                for GroupKeys in GroupID {
+                    self.joingroupid.append(GroupKeys)
+                }
+            //こっちでfor文回したら直った
+            for grouoid in self.joingroupid {
+                print("sss")
+                self.getgroup(GroupKey: grouoid)
             }
-            self.items = newItems
-            self.collectionView.reloadData()
-        })
+
+            })
         
     }
 
@@ -84,7 +89,8 @@ class GroupViewController: UIViewController,UICollectionViewDelegate,UICollectio
     
     //セルタップした時のイベント処理
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
+        let item = items[indexPath.row]
+
         //セルの取得
         let cell:UICollectionViewCell = collectionView.cellForItem(at: indexPath)!
         //選択された画像
@@ -100,13 +106,21 @@ class GroupViewController: UIViewController,UICollectionViewDelegate,UICollectio
         let amountlabel = cell.contentView.viewWithTag(4) as? UILabel
         self.selectedamount = amountlabel?.text!
         
-        performSegue(withIdentifier: "Gotodetail", sender: nil)
+        //groupidを登録
+        ud.set(item.groupid, forKey: "groupid")
+        performSegue(withIdentifier: "FromGroup", sender: nil)
     }
     
     // Segue 準備
     override func prepare(for segue: UIStoryboardSegue, sender: Any!) {
-        if (segue.identifier == "Gotodetail") {
-            let GDVC: GroupDetailViewController = (segue.destination as? GroupDetailViewController)!
+        if (segue.identifier == "FromGroup") {
+            guard let nav = segue.destination as? UINavigationController else {
+                return
+            }
+            guard let GDVC = nav.topViewController as? GroupDetailViewController else {
+                return
+            }
+            
             // SubViewController のselectedImgに選択された画像を設定する
             GDVC.groupimage = selectedImage!
             GDVC.namelabel = selectedname!
@@ -115,5 +129,23 @@ class GroupViewController: UIViewController,UICollectionViewDelegate,UICollectio
         }
     }
     
-    @IBAction func goBacktoGrouo(_ segue:UIStoryboardSegue) {}
+    @IBAction func goBacktoGrouo(_ segue:UIStoryboardSegue) {
+        let ud = UserDefaults.standard
+        ud.removeObject(forKey: "groupid")
+        
+    }
+    
+    func getgroup(GroupKey:String){
+        self.ref.child("Gruop").child(GroupKey).observe(.value, with: { (snapshot) in
+                    let item = GroupData(snapshot: snapshot )
+                    self.items.append(item!)
+                    self.collectionView.reloadData()
+
+            })
+
+    }
+    
+
 }
+
+

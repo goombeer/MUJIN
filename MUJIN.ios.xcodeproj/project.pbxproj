@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		16158CA31FC3F91600218A31 /* GroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16158CA21FC3F91600218A31 /* GroupViewController.swift */; };
+		163661DE1FC9BB3C0011A645 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163661DD1FC9BB3C0011A645 /* RegisterViewController.swift */; };
 		1641359F1FC6882C00971794 /* GroupDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1641359E1FC6882C00971794 /* GroupDetailViewController.swift */; };
 		164135A31FC6968A00971794 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164135A21FC6968A00971794 /* CustomButton.swift */; };
 		164A20C51FC17E0D0044B25F /* NoticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164A20C41FC17E0D0044B25F /* NoticeViewController.swift */; };
@@ -18,6 +19,11 @@
 		169CDDD41FC1709A0050223B /* ShareTableTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169CDDD31FC1709A0050223B /* ShareTableTableViewController.swift */; };
 		16AF50911FB1751A00BA3194 /* GroupCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AF50901FB1751A00BA3194 /* GroupCreateViewController.swift */; };
 		16AF509B1FB1B22F00BA3194 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AF509A1FB1B22F00BA3194 /* HomeViewController.swift */; };
+		16B736B51FC86D930088EF71 /* SlackTextViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16B736B61FC86D930088EF71 /* SlackTextViewController.framework */; };
+		16B736B71FC86D9D0088EF71 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16B736B81FC86D9D0088EF71 /* SnapKit.framework */; };
+		16B736BA1FC873EA0088EF71 /* Chatviewcontroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B736B91FC873EA0088EF71 /* Chatviewcontroller.swift */; };
+		16B736C01FC874FB0088EF71 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B736BF1FC874FB0088EF71 /* TableViewCell.swift */; };
+		16DF804A1FCC819200B2DEFC /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16DF80491FCC819100B2DEFC /* Message.swift */; };
 		16FA6C961FAC56F00016F254 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FA6C951FAC56F00016F254 /* AppDelegate.swift */; };
 		16FA6C981FAC56F00016F254 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FA6C971FAC56F00016F254 /* ViewController.swift */; };
 		16FA6C9B1FAC56F00016F254 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16FA6C991FAC56F00016F254 /* Main.storyboard */; };
@@ -35,6 +41,7 @@
 /* Begin PBXFileReference section */
 		0C117FD3411BDCCD7B801F43 /* Pods-MUJIN.ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MUJIN.ios.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MUJIN.ios/Pods-MUJIN.ios.debug.xcconfig"; sourceTree = "<group>"; };
 		16158CA21FC3F91600218A31 /* GroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewController.swift; sourceTree = "<group>"; };
+		163661DD1FC9BB3C0011A645 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		1641359E1FC6882C00971794 /* GroupDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDetailViewController.swift; sourceTree = "<group>"; };
 		164135A21FC6968A00971794 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		164A20C41FC17E0D0044B25F /* NoticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeViewController.swift; sourceTree = "<group>"; };
@@ -45,6 +52,12 @@
 		169CDDD31FC1709A0050223B /* ShareTableTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareTableTableViewController.swift; sourceTree = "<group>"; };
 		16AF50901FB1751A00BA3194 /* GroupCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCreateViewController.swift; sourceTree = "<group>"; };
 		16AF509A1FB1B22F00BA3194 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		16B21B7A1FCC80220023844E /* Bolts.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Bolts.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		16B736B61FC86D930088EF71 /* SlackTextViewController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SlackTextViewController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		16B736B81FC86D9D0088EF71 /* SnapKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SnapKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		16B736B91FC873EA0088EF71 /* Chatviewcontroller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chatviewcontroller.swift; sourceTree = "<group>"; };
+		16B736BF1FC874FB0088EF71 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		16DF80491FCC819100B2DEFC /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		16FA6C921FAC56F00016F254 /* MUJIN.ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MUJIN.ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		16FA6C951FAC56F00016F254 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		16FA6C971FAC56F00016F254 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -69,6 +82,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16B736B71FC86D9D0088EF71 /* SnapKit.framework in Frameworks */,
+				16B736B51FC86D930088EF71 /* SlackTextViewController.framework in Frameworks */,
 				16FA6CB31FAE10B20016F254 /* SDWebImage.framework in Frameworks */,
 				16FA6CA71FAC57960016F254 /* FBSDKCoreKit.framework in Frameworks */,
 				16FA6CA81FAC57960016F254 /* FBSDKLoginKit.framework in Frameworks */,
@@ -106,6 +121,10 @@
 				166FC64D1FC0105E006F8B94 /* LoginViewController.swift */,
 				16FA6C971FAC56F00016F254 /* ViewController.swift */,
 				16FA6C991FAC56F00016F254 /* Main.storyboard */,
+				163661DD1FC9BB3C0011A645 /* RegisterViewController.swift */,
+				16B736B91FC873EA0088EF71 /* Chatviewcontroller.swift */,
+				16B736BF1FC874FB0088EF71 /* TableViewCell.swift */,
+				16DF80491FCC819100B2DEFC /* Message.swift */,
 				1641359E1FC6882C00971794 /* GroupDetailViewController.swift */,
 				16158CA21FC3F91600218A31 /* GroupViewController.swift */,
 				169CDDD31FC1709A0050223B /* ShareTableTableViewController.swift */,
@@ -138,6 +157,9 @@
 		A9CF62C1578C1694B84B3BE6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				16B21B7A1FCC80220023844E /* Bolts.framework */,
+				16B736B81FC86D9D0088EF71 /* SnapKit.framework */,
+				16B736B61FC86D930088EF71 /* SlackTextViewController.framework */,
 				16FA6CB41FAE10B20016F254 /* SDWebImage.framework */,
 				16FA6CAA1FAC57960016F254 /* FBSDKCoreKit.framework */,
 				16FA6CAB1FAC57960016F254 /* FBSDKLoginKit.framework */,
@@ -239,6 +261,8 @@
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
+				"${BUILT_PRODUCTS_DIR}/SlackTextViewController/SlackTextViewController.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
@@ -251,6 +275,8 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SlackTextViewController.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
@@ -302,15 +328,19 @@
 				166FC64E1FC0105E006F8B94 /* LoginViewController.swift in Sources */,
 				16AF509B1FB1B22F00BA3194 /* HomeViewController.swift in Sources */,
 				16FA6CB21FAC67E70016F254 /* SecondViewController.swift in Sources */,
+				16DF804A1FCC819200B2DEFC /* Message.swift in Sources */,
 				1684699B1FC06A04002BA60B /* SettingViewController.swift in Sources */,
 				164135A31FC6968A00971794 /* CustomButton.swift in Sources */,
 				1641359F1FC6882C00971794 /* GroupDetailViewController.swift in Sources */,
 				164A20C51FC17E0D0044B25F /* NoticeViewController.swift in Sources */,
 				166FC64C1FBFDE15006F8B94 /* InputMessageViewController.swift in Sources */,
 				16AF50911FB1751A00BA3194 /* GroupCreateViewController.swift in Sources */,
+				163661DE1FC9BB3C0011A645 /* RegisterViewController.swift in Sources */,
 				16FA6C981FAC56F00016F254 /* ViewController.swift in Sources */,
+				16B736BA1FC873EA0088EF71 /* Chatviewcontroller.swift in Sources */,
 				16FA6C961FAC56F00016F254 /* AppDelegate.swift in Sources */,
 				169CDDD41FC1709A0050223B /* ShareTableTableViewController.swift in Sources */,
+				16B736C01FC874FB0088EF71 /* TableViewCell.swift in Sources */,
 				164A20C71FC268FC0044B25F /* GroupData.swift in Sources */,
 				16158CA31FC3F91600218A31 /* GroupViewController.swift in Sources */,
 			);

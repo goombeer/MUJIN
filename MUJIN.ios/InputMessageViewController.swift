@@ -15,7 +15,7 @@ class InputMessageViewController: UIViewController,UIPickerViewDelegate,UIPicker
     
 
     var ref: DatabaseReference!
-    var user: User!
+    let user = UserDefaults.standard.object(forKey: "UID") as! String
     
     //前の画面からの変数の受け取り
     var groupname: String = ""
@@ -33,7 +33,6 @@ class InputMessageViewController: UIViewController,UIPickerViewDelegate,UIPicker
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        user = Auth.auth().currentUser
         
         messageView.layer.borderWidth = 0.5
         messageView.layer.cornerRadius = 10
@@ -104,13 +103,15 @@ class InputMessageViewController: UIViewController,UIPickerViewDelegate,UIPicker
         }
         
       ref = Database.database().reference()
-        self.ref.child("Gruop").childByAutoId().setValue(["name": groupname,"payment":payment,"memberofnumber":memberofnumber,"period":period,"founder":(self.user.uid),"message":message!,"publicnum":self.publicnum])
-      print("書き込み終了")
-      let postsRef = Database.database().reference().child("Gruop")
-      postsRef.observe(.childAdded, with: { snapshot in
-      let dictionary = snapshot.value as! [String: AnyObject]
-      print(dictionary["name"]!)
-                })
+      let GroupId = ref.child("Group").childByAutoId().key
+        
+      self.ref.child("Gruop").child(GroupId).setValue(["payment":payment,"memberofnumber":memberofnumber,"period":period,"founder":(self.user),"name":groupname,"message":message!,"publicnum":self.publicnum])
+      
+        self.ref.child("User").child(self.user).child("groups").updateChildValues([GroupId:true])
+//      let postsRef = Database.database().reference().child("Gruop")
+//      postsRef.observe(.childAdded, with: { snapshot in
+//      let dictionary = snapshot.value as! [String: AnyObject]
+//                })
         
     }
 }
