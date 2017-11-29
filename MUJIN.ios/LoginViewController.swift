@@ -10,7 +10,11 @@ import UIKit
 import Firebase
 
 class LoginViewController: UIViewController {
-
+    
+    var user: User!
+    var ref: DatabaseReference!
+    let ud = UserDefaults.standard
+    
     @IBOutlet weak var emailFiled: UITextField!
     @IBOutlet weak var passfield: UITextField!
     
@@ -62,6 +66,18 @@ class LoginViewController: UIViewController {
     }
     
     func signIn() {
+        user = Auth.auth().currentUser
+        ref = Database.database().reference()
+
+        self.ref.child("User").child(user.uid).child("name").observe(.value, with: { (snapshot) in
+            let username = snapshot.value as? [String:Any]
+            self.ud.set(username!["username"], forKey: "Username")
+
+        
+        })
+        
+        self.ud.set(self.user.uid, forKey: "UID")
+        self.ud.synchronize()
         performSegue(withIdentifier: "signIn", sender: nil)
     }
 }

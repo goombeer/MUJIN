@@ -14,7 +14,6 @@ class SettingViewController: UIViewController,UITableViewDelegate,UITableViewDat
     
     var user: User!
     var ref: DatabaseReference!
-    let ud = UserDefaults.standard
 
     let imageset:[UIImage] = [
         (UIImage(named:"facebook.png")?.resize(size: CGSize(width:50, height:50))!.withRenderingMode(.alwaysTemplate))!,
@@ -95,18 +94,19 @@ class SettingViewController: UIViewController,UITableViewDelegate,UITableViewDat
             let firebaseAuth = Auth.auth()
             do {
                 try firebaseAuth.signOut()
-                ud.removeObject(forKey: "Username")
-                ud.removeObject(forKey: "UID")
-
-                if ud.object(forKey: "Username") == nil && ud.object(forKey: "UID") == nil {
-                    print("削除完了")
-                }
+                removeUserDefaults()
+                
                 performSegue(withIdentifier: "Singout", sender: nil)
                 print("sinnout")
             } catch let signOutError as NSError {
                 print ("Error signing out: %@", signOutError)
             }
         }
+    }
+    
+    func removeUserDefaults() {
+        let appDomain = Bundle.main.bundleIdentifier
+        UserDefaults.standard.removePersistentDomain(forName: appDomain!)
     }
 }
 

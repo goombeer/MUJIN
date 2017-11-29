@@ -22,7 +22,7 @@ class GroupViewController: UIViewController,UICollectionViewDelegate,UICollectio
     var selectedjoinnum: String?
     var selectedamount: String?
     let ud = UserDefaults.standard
-    let UID = UserDefaults.standard.object(forKey: "UID") as! String
+    let UID = UserDefaults.standard.string(forKey: "UID")
     var joingroupid: Array<String>  = []
     
     override func viewDidLoad() {
@@ -39,10 +39,14 @@ class GroupViewController: UIViewController,UICollectionViewDelegate,UICollectio
    
         ref = Database.database().reference()
 
-        ref.child("User").child(self.UID).child("groups").observeSingleEvent(of: .value, with: { (snapshot) in
-                let array = snapshot.value as! [String:AnyObject]
-                let GroupID = array.keys
-                for GroupKeys in GroupID {
+        ref.child("User").child(self.UID!).child("groups").observeSingleEvent(of: .value, with: { (snapshot) in
+                let array = snapshot.value as? [String:AnyObject]
+            let GroupID = array?.keys
+            if GroupID == nil {
+                return
+            }
+            
+            for GroupKeys in GroupID! {
                     self.joingroupid.append(GroupKeys)
                 }
             //こっちでfor文回したら直った
@@ -68,7 +72,7 @@ class GroupViewController: UIViewController,UICollectionViewDelegate,UICollectio
         let item = items[indexPath.row]
         
         let groupimage = cell.contentView.viewWithTag(1) as? UIImageView
-        groupimage?.image = UIImage(named: "line.png")
+        groupimage?.image = UIImage(named: "sinji.png")
         
         let namelabel = cell.contentView.viewWithTag(2) as? UILabel
         namelabel?.text = item.name!
@@ -82,8 +86,8 @@ class GroupViewController: UIViewController,UICollectionViewDelegate,UICollectio
         
         cell.layer.borderWidth = 1
         cell.layer.cornerRadius = 6
-        cell.layer.borderColor = UIColor.gray.cgColor
-        
+        cell.layer.borderColor = UIColor(red:1.00, green:0.75, blue:0.51, alpha:1.0).cgColor
+
         return cell
     }
     
@@ -107,7 +111,7 @@ class GroupViewController: UIViewController,UICollectionViewDelegate,UICollectio
         self.selectedamount = amountlabel?.text!
         
         //groupidを登録
-        ud.set(item.groupid, forKey: "groupid")
+        ud.set(item.groupid, forKey: "tappedgroupid")
         performSegue(withIdentifier: "FromGroup", sender: nil)
     }
     

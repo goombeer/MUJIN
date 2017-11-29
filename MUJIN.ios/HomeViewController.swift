@@ -15,6 +15,12 @@ UICollectionViewDelegate ,UICollectionViewDelegateFlowLayout{
 
     var ref: DatabaseReference!
     var items = [GroupData]()
+    let ud = UserDefaults.standard
+    let UID = UserDefaults.standard.string(forKey: "UID") 
+    var selectedImage: UIImage?
+    var selectedname: String?
+    var selectedjoinnum: String?
+    var selectedamount: String?
     private var databaseHandle: DatabaseHandle!
     
     @IBOutlet weak var collectionView: UICollectionView!
@@ -24,7 +30,7 @@ UICollectionViewDelegate ,UICollectionViewDelegateFlowLayout{
         
         collectionView.dataSource = self
         collectionView.delegate = self
-       
+        
         
         ref = Database.database().reference()
         databaseHandle = ref.child("Gruop").observe(.value, with: { (snapshot) in
@@ -59,7 +65,7 @@ UICollectionViewDelegate ,UICollectionViewDelegateFlowLayout{
         let item = items[indexPath.row]
         
         let groupimage = cell.contentView.viewWithTag(1) as? UIImageView
-        groupimage?.image = UIImage(named: "line.png")
+        groupimage?.image = UIImage(named: "sinji.png")
         
         let namelabel = cell.contentView.viewWithTag(2) as? UILabel
         namelabel?.text = item.name!
@@ -73,9 +79,51 @@ UICollectionViewDelegate ,UICollectionViewDelegateFlowLayout{
         
         cell.layer.borderWidth = 1
         cell.layer.cornerRadius = 6
-        cell.layer.borderColor = UIColor.gray.cgColor
+        cell.layer.borderColor = UIColor(red:1.00, green:0.75, blue:0.51, alpha:1.0).cgColor
 
         return cell
     }
     
+    //セルタップした時のイベント処理
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let item = items[indexPath.row]
+        
+        //セルの取得
+        let cell:UICollectionViewCell = collectionView.cellForItem(at: indexPath)!
+        //選択された画像
+        let groupimage = cell.contentView.viewWithTag(1) as? UIImageView
+        self.selectedImage = groupimage?.image!
+        //選択されたグループ名
+        let namelabel = cell.contentView.viewWithTag(2) as? UILabel
+        self.selectedname = namelabel?.text!
+        //選択された参加人数
+        let joinlabel = cell.contentView.viewWithTag(3) as? UILabel
+        self.selectedjoinnum = joinlabel?.text!
+        //選択された運用金額
+        let amountlabel = cell.contentView.viewWithTag(4) as? UILabel
+        self.selectedamount = amountlabel?.text!
+        
+        //groupidを登録
+        ud.set(item.groupid, forKey: "tappedgroupid")
+        performSegue(withIdentifier: "FromHome", sender: nil)
+    }
+    
+    // Segue 準備
+    override func prepare(for segue: UIStoryboardSegue, sender: Any!) {
+        if (segue.identifier == "FromHome") {
+            guard let nav = segue.destination as? UINavigationController else {
+                return
+            }
+            guard let GDVC = nav.topViewController as? GroupDetailViewController else {
+                return
+            }
+            
+            // SubViewController のselectedImgに選択された画像を設定する
+            GDVC.groupimage = selectedImage!
+            GDVC.namelabel = selectedname!
+            GDVC.joinnumber = selectedjoinnum!
+            GDVC.amountlabel = selectedamount!
+        }
+    }
+
 }

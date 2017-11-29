@@ -43,6 +43,7 @@ class RegisterViewController: UIViewController {
         let password = passwordField.text
         let username = UsernameField.text
         
+        print("サインイン開始")
         Auth.auth().createUser(withEmail: email!, password: password!, completion: { (user, error) in
             if let error = error {
                 if let errCode = AuthErrorCode(rawValue: error._code) {
@@ -58,28 +59,28 @@ class RegisterViewController: UIViewController {
                 return
             }
             self.signIn(email:email!,psssword:password!,username: username!)
+            print("終了")
+
         })
         
     }
     
     func signIn(email:String,psssword:String,username:String) {
-        print("サインイン開始")
         Auth.auth().signIn(withEmail: email, password: psssword, completion: { (user, error) in
           
         })
         self.ref = Database.database().reference()
         user = Auth.auth().currentUser
-        self.ref.child("User").child(self.user.uid).child("name").setValue(["username":username])
+        self.ref.child("User").child(user.uid).child("name").setValue(["username":username])
         
         ud.set(username, forKey: "Username")
-        ud.set(self.user.uid, forKey: "UID")
+        ud.set(user.uid, forKey: "UID")
         ud.synchronize()
         
     
 
-        performSegue(withIdentifier: "fromregister", sender: nil)
+        performSegue(withIdentifier: "Fromregister", sender: nil)
 
-        print("終了")
 
     }
     

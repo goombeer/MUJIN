@@ -15,9 +15,9 @@ import FirebaseDatabase
 class ChatViewController: SLKTextViewController {
     var groupname:String = ""
     var messages = [Message]()
-    let username = UserDefaults.standard.object(forKey: "Username") as! String
-    let user = UserDefaults.standard.object(forKey: "UID") as! String
-    let groupid = UserDefaults.standard.object(forKey: "groupid") as! String
+    let username = UserDefaults.standard.string(forKey: "Username")
+    let user = UserDefaults.standard.string(forKey: "UID")
+    let groupid = UserDefaults.standard.string(forKey: "tappedgroupid")
     var ref = Database.database().reference()
     private var databaseHandle: DatabaseHandle!
     
@@ -63,18 +63,18 @@ class ChatViewController: SLKTextViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        ref.child("Messages").child(groupid).removeAllObservers()
+        ref.child("Messages").child(groupid!).removeAllObservers()
     }
     
     func addMessage(name: String,msg: String,right: Bool = true) {
-        ref.child("Messages").child(groupid).childByAutoId().setValue(["sender":username,"text":msg,"time":ServerValue.timestamp()])
+        ref.child("Messages").child(groupid!).childByAutoId().setValue(["sender":username,"text":msg,"time":ServerValue.timestamp()])
         
 
     }
     
     func startObservingDatabase () {
 
-        databaseHandle = ref.child("Messages").child(self.groupid).observe(.value, with: { (snapshot) in
+        databaseHandle = ref.child("Messages").child(self.groupid!).observe(.value, with: { (snapshot) in
             var newmessages = [Message]()
             print(self.databaseHandle)
             for itemSnapShot in snapshot.children {
@@ -89,7 +89,7 @@ class ChatViewController: SLKTextViewController {
     }
 
     override func didPressRightButton(_ sender: Any?) {
-        addMessage(name: username,msg:self.textView.text)
+        addMessage(name: username!,msg:self.textView.text)
         self.textView.text = ""
     }
     
@@ -118,6 +118,11 @@ class ChatViewController: SLKTextViewController {
         
     }
     
+    @IBAction func gobacktapped(_ sender: UIBarButtonItem) {
+        let ud = UserDefaults.standard
+        ud.removeObject(forKey: "groupid")
+        self.dismiss(animated: true)
+    }
     
     
 }
