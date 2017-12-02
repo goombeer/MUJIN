@@ -40,6 +40,7 @@ class ShareTableTableViewController: UITableViewController {
         super.viewDidLoad()
         
         tableView.tableFooterView = UIView(frame: .zero)
+        tableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
     }
 
     override func didReceiveMemoryWarning() {

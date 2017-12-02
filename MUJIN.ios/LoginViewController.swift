@@ -14,13 +14,20 @@ class LoginViewController: UIViewController {
     var user: User!
     var ref: DatabaseReference!
     let ud = UserDefaults.standard
+    //[groupkey,UID]の形で保持する
+    var array:[String] = []
     
     @IBOutlet weak var emailFiled: UITextField!
     @IBOutlet weak var passfield: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        if let nv = navigationController {
+            let hidden = !nv.isNavigationBarHidden
+            nv.setNavigationBarHidden(hidden, animated: true)
+        }
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -31,9 +38,9 @@ class LoginViewController: UIViewController {
 
    
     @IBAction func logintap(_ sender: UIButton) {
+        print("tap")
         let email = emailFiled.text
         let password = passfield.text
-        print("sinin start")
         Auth.auth().signIn(withEmail: email!, password: password!, completion: { (user, error) in
             guard let _ = user else {
                 if let error = error {
@@ -66,18 +73,35 @@ class LoginViewController: UIViewController {
     }
     
     func signIn() {
+        
         user = Auth.auth().currentUser
         ref = Database.database().reference()
 
-        self.ref.child("User").child(user.uid).child("name").observe(.value, with: { (snapshot) in
+        self.ref.child("User").child(user.uid).observe(.value, with: { (snapshot) in
             let username = snapshot.value as? [String:Any]
             self.ud.set(username!["username"], forKey: "Username")
 
         
         })
         
-        self.ud.set(self.user.uid, forKey: "UID")
+        //自分宛の通知を取得
+        print("通知取得開始")
+       self.ref.child("User").child(user.uid).child("notifications").observeSingleEvent(of:.value, with: { (snapshot) in
+            var newarray:[String] = []
+            for child in snapshot.children {
+                let item = NoticeficationData(snapshot: child as! DataSnapshot)
+                newarray.append((item?.groupid)!)
+                self.array = newarray
+                self.ud.set(self.array, forKey: "notification")
+                print("通知取得終了")
+
+            }
+            
+        })
+        self.ud.set(user.uid, forKey: "MyUID")
         self.ud.synchronize()
         performSegue(withIdentifier: "signIn", sender: nil)
+        emailFiled.text = ""
+        passfield.text  = ""
     }
 }

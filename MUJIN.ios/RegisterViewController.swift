@@ -71,10 +71,10 @@ class RegisterViewController: UIViewController {
         })
         self.ref = Database.database().reference()
         user = Auth.auth().currentUser
-        self.ref.child("User").child(user.uid).child("name").setValue(["username":username])
+        self.ref.child("User").child(user.uid).setValue(["username":username])
         
         ud.set(username, forKey: "Username")
-        ud.set(user.uid, forKey: "UID")
+        ud.set(user.uid, forKey: "MyUID")
         ud.synchronize()
         
     

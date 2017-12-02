@@ -16,7 +16,7 @@ class ChatViewController: SLKTextViewController {
     var groupname:String = ""
     var messages = [Message]()
     let username = UserDefaults.standard.string(forKey: "Username")
-    let user = UserDefaults.standard.string(forKey: "UID")
+    let user = UserDefaults.standard.string(forKey: "MyUID")
     let groupid = UserDefaults.standard.string(forKey: "tappedgroupid")
     var ref = Database.database().reference()
     private var databaseHandle: DatabaseHandle!
@@ -120,7 +120,9 @@ class ChatViewController: SLKTextViewController {
     
     @IBAction func gobacktapped(_ sender: UIBarButtonItem) {
         let ud = UserDefaults.standard
-        ud.removeObject(forKey: "groupid")
+        ud.removeObject(forKey: "tappedgroupid")
+        ud.removeObject(forKey: "tappedfounder")
+
         self.dismiss(animated: true)
     }
     

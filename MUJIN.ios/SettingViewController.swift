@@ -15,6 +15,7 @@ class SettingViewController: UIViewController,UITableViewDelegate,UITableViewDat
     var user: User!
     var ref: DatabaseReference!
 
+    
     let imageset:[UIImage] = [
         (UIImage(named:"facebook.png")?.resize(size: CGSize(width:50, height:50))!.withRenderingMode(.alwaysTemplate))!,
         (UIImage(named:"cash.png")?.resize(size: CGSize(width:50, height:50))!.withRenderingMode(.alwaysTemplate))!,
@@ -32,7 +33,7 @@ class SettingViewController: UIViewController,UITableViewDelegate,UITableViewDat
         super.viewDidLoad()
         ref = Database.database().reference()
         let userID = Auth.auth().currentUser?.uid
-        ref.child("User").child(userID!).child("name").observeSingleEvent(of: .value, with: { (snapshot) in
+        ref.child("User").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
             let value = snapshot.value as? NSDictionary
             let Username = value?["username"] as? String ?? ""
             self.username.text = Username
@@ -96,7 +97,9 @@ class SettingViewController: UIViewController,UITableViewDelegate,UITableViewDat
                 try firebaseAuth.signOut()
                 removeUserDefaults()
                 
-                performSegue(withIdentifier: "Singout", sender: nil)
+                //画面の解放することで初期画面に遷移させている
+                UIApplication.shared.keyWindow?.rootViewController?
+                    .dismiss(animated: true, completion: nil)
                 print("sinnout")
             } catch let signOutError as NSError {
                 print ("Error signing out: %@", signOutError)
@@ -108,6 +111,8 @@ class SettingViewController: UIViewController,UITableViewDelegate,UITableViewDat
         let appDomain = Bundle.main.bundleIdentifier
         UserDefaults.standard.removePersistentDomain(forName: appDomain!)
     }
+    
+
 }
 
 

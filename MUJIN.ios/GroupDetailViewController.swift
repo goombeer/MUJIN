@@ -16,8 +16,13 @@ class GroupDetailViewController: UIViewController {
     var namelabel: String = ""
     var joinnumber: String = ""
     var amountlabel: String = ""
+    let ud = UserDefaults.standard
+    let tappedfounder = UserDefaults.standard.string(forKey: "tappedfounder")
     let tappedgroupid = UserDefaults.standard.string(forKey: "tappedgroupid")
-    let UID = UserDefaults.standard.string(forKey: "UID") 
+    let tappedgroupname = UserDefaults.standard.string(forKey: "tappedgroupname")
+    let Username = UserDefaults.standard.string(forKey: "Username")
+    let UID = UserDefaults.standard.string(forKey: "MyUID")
+
     var joingroupid: Array = [String]()
     
     @IBOutlet weak var navigatiobar: UINavigationBar!
@@ -29,29 +34,6 @@ class GroupDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //タップしたグループIDと参加しているIDが一致するか確認
-        ref.child("User").child(self.UID!).child("groups").observeSingleEvent(of: .value, with: {(snapshot) in
-            
-            //ここで参加しているグループidを取得して、配列にぶっこんでいる
-            for child in snapshot.children {
-                let snap = child as! DataSnapshot
-                let key = snap.key
-                self.joingroupid.append(key)
-            }
-            
-            //ここで検索かける
-            if self.joingroupid.index(of: self.tappedgroupid!) == nil{
-                self.tapLabel.setTitle("申請する", for: .normal)
-            } else {
-                self.tapLabel.setTitle("チャットへ", for: .normal)
-
-            }
-
-        
-        })
-        
-        
         
         self.navigationItem.title = namelabel
         image.image = groupimage
@@ -67,6 +49,32 @@ class GroupDetailViewController: UIViewController {
             period.text = "7ヶ月"
         }
         
+        
+        //タップしたグループIDと参加しているIDが一致するか確認
+        ref.child("User").child(self.UID!).child("groups").observeSingleEvent(of: .value, with: {(snapshot) in
+            
+            //ここで参加しているグループidを取得して、配列にぶっこんでいる
+            for child in snapshot.children {
+                let snap = child as! DataSnapshot
+                let key = snap.key
+                self.joingroupid.append(key)
+            }
+            
+            //ここで検索かける
+            //UIBUtton生成した方がラグがないかも・・？
+            if self.joingroupid.index(of: self.tappedgroupid!) == nil{
+                self.tapLabel.setTitle("申請する", for: .normal)
+            } else {
+                self.tapLabel.setTitle("チャットへ", for: .normal)
+
+            }
+
+        
+        })
+        
+        
+        
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -75,8 +83,18 @@ class GroupDetailViewController: UIViewController {
     }
     
     @IBAction func tappedchat(_ sender: UIButton) {
-        
-        performSegue(withIdentifier: "Gotochat", sender: namelabel)
+        if tapLabel.currentTitle == "申請する" {
+            print("申請開始")
+            //まずはnotificationに情報を登録
+            ref.child("Notifications").child(tappedgroupid!).childByAutoId().setValue(["groupname":tappedgroupname!,"from":Username!,"status":"unDone","Groupkey":tappedgroupid!,"Applyid":UID!])
+            //founderに申請があったグループキー(どこのグループか)と申請者のUID(誰から来たのか)を持たせる
+            ref.child("User").child(tappedfounder!).child("notifications").childByAutoId().setValue(["Groupkey":tappedgroupid!,"UID":UID!])
+
+            tapLabel.setTitle("申請済み", for: .normal)
+            tapLabel.isEnabled = false
+        } else {
+            performSegue(withIdentifier: "Gotochat", sender: namelabel)
+        }
 
     }
     
@@ -95,8 +113,8 @@ class GroupDetailViewController: UIViewController {
     
     
     @IBAction func Gobacktapped(_ sender: UIBarButtonItem) {
-        let ud = UserDefaults.standard
         ud.removeObject(forKey: "tappedgroupid")
+        ud.removeObject(forKey: "tappedfounder")
         self.dismiss(animated: true)
     }
    

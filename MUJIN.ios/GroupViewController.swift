@@ -22,7 +22,7 @@ class GroupViewController: UIViewController,UICollectionViewDelegate,UICollectio
     var selectedjoinnum: String?
     var selectedamount: String?
     let ud = UserDefaults.standard
-    let UID = UserDefaults.standard.string(forKey: "UID")
+    let UID = UserDefaults.standard.string(forKey: "MyUID")
     var joingroupid: Array<String>  = []
     
     override func viewDidLoad() {
@@ -40,7 +40,7 @@ class GroupViewController: UIViewController,UICollectionViewDelegate,UICollectio
         ref = Database.database().reference()
 
         ref.child("User").child(self.UID!).child("groups").observeSingleEvent(of: .value, with: { (snapshot) in
-                let array = snapshot.value as? [String:AnyObject]
+            let array = snapshot.value as? [String:AnyObject]
             let GroupID = array?.keys
             if GroupID == nil {
                 return
@@ -75,6 +75,8 @@ class GroupViewController: UIViewController,UICollectionViewDelegate,UICollectio
         groupimage?.image = UIImage(named: "sinji.png")
         
         let namelabel = cell.contentView.viewWithTag(2) as? UILabel
+        namelabel?.font = UIFont(name: "Arial", size: 14)
+        namelabel?.font = UIFont.boldSystemFont(ofSize: 12)
         namelabel?.text = item.name!
         
         
@@ -110,8 +112,16 @@ class GroupViewController: UIViewController,UICollectionViewDelegate,UICollectio
         let amountlabel = cell.contentView.viewWithTag(4) as? UILabel
         self.selectedamount = amountlabel?.text!
         
+        //groupnameを登録
+        print(item.name!)
+        ud.set(item.name!, forKey: "tappedgroupname")
         //groupidを登録
         ud.set(item.groupid, forKey: "tappedgroupid")
+        //founder登録
+        ud.set(item.founder, forKey: "tappedfounder")
+        //登録
+        ud.synchronize()
+        
         performSegue(withIdentifier: "FromGroup", sender: nil)
     }
     
@@ -135,7 +145,10 @@ class GroupViewController: UIViewController,UICollectionViewDelegate,UICollectio
     
     @IBAction func goBacktoGrouo(_ segue:UIStoryboardSegue) {
         let ud = UserDefaults.standard
-        ud.removeObject(forKey: "groupid")
+        ud.removeObject(forKey: "tappedgroupname")
+        ud.removeObject(forKey: "tappedgroupid")
+        ud.removeObject(forKey: "tappedfounder")
+
         
     }
     

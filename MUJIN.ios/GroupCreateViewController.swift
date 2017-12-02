@@ -190,10 +190,5 @@ class GroupCreateViewController: UIViewController,UIPickerViewDelegate,UIPickerV
         return true
     }
     
-    //キーボードが隠れないように処理
-//    func keyboardWillBeShown(notification: NSNotification) {
-//    }
-//
-//    func keyboardWillBeHidden(notification: NSNotification) {
-//    }
+
 }

@@ -11,10 +11,13 @@
 		163661DE1FC9BB3C0011A645 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163661DD1FC9BB3C0011A645 /* RegisterViewController.swift */; };
 		1641359F1FC6882C00971794 /* GroupDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1641359E1FC6882C00971794 /* GroupDetailViewController.swift */; };
 		164135A31FC6968A00971794 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164135A21FC6968A00971794 /* CustomButton.swift */; };
+		1641F0EF1FD112CE0089B97B /* ModelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1641F0EE1FD112CE0089B97B /* ModelViewController.swift */; };
 		164A20C51FC17E0D0044B25F /* NoticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164A20C41FC17E0D0044B25F /* NoticeViewController.swift */; };
 		164A20C71FC268FC0044B25F /* GroupData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164A20C61FC268FC0044B25F /* GroupData.swift */; };
 		166FC64C1FBFDE15006F8B94 /* InputMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166FC64B1FBFDE15006F8B94 /* InputMessageViewController.swift */; };
 		166FC64E1FC0105E006F8B94 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166FC64D1FC0105E006F8B94 /* LoginViewController.swift */; };
+		16774C0B1FD28E2E0096606E /* GetNotificationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16774C0A1FD28E2E0096606E /* GetNotificationStatus.swift */; };
+		167AE68D1FCE6BC9006597EE /* NoticeficationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167AE68C1FCE6BC9006597EE /* NoticeficationData.swift */; };
 		1684699B1FC06A04002BA60B /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1684699A1FC06A04002BA60B /* SettingViewController.swift */; };
 		169CDDD41FC1709A0050223B /* ShareTableTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169CDDD31FC1709A0050223B /* ShareTableTableViewController.swift */; };
 		16AF50911FB1751A00BA3194 /* GroupCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AF50901FB1751A00BA3194 /* GroupCreateViewController.swift */; };
@@ -23,6 +26,7 @@
 		16B736B71FC86D9D0088EF71 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16B736B81FC86D9D0088EF71 /* SnapKit.framework */; };
 		16B736BA1FC873EA0088EF71 /* Chatviewcontroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B736B91FC873EA0088EF71 /* Chatviewcontroller.swift */; };
 		16B736C01FC874FB0088EF71 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B736BF1FC874FB0088EF71 /* TableViewCell.swift */; };
+		16BA133D1FD058470071E603 /* GetGroupnameAndApply.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BA133C1FD058470071E603 /* GetGroupnameAndApply.swift */; };
 		16DF804A1FCC819200B2DEFC /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16DF80491FCC819100B2DEFC /* Message.swift */; };
 		16FA6C961FAC56F00016F254 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FA6C951FAC56F00016F254 /* AppDelegate.swift */; };
 		16FA6C981FAC56F00016F254 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FA6C971FAC56F00016F254 /* ViewController.swift */; };
@@ -44,10 +48,13 @@
 		163661DD1FC9BB3C0011A645 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		1641359E1FC6882C00971794 /* GroupDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDetailViewController.swift; sourceTree = "<group>"; };
 		164135A21FC6968A00971794 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
+		1641F0EE1FD112CE0089B97B /* ModelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelViewController.swift; sourceTree = "<group>"; };
 		164A20C41FC17E0D0044B25F /* NoticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeViewController.swift; sourceTree = "<group>"; };
 		164A20C61FC268FC0044B25F /* GroupData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupData.swift; sourceTree = "<group>"; };
 		166FC64B1FBFDE15006F8B94 /* InputMessageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputMessageViewController.swift; sourceTree = "<group>"; };
 		166FC64D1FC0105E006F8B94 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		16774C0A1FD28E2E0096606E /* GetNotificationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetNotificationStatus.swift; sourceTree = "<group>"; };
+		167AE68C1FCE6BC9006597EE /* NoticeficationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeficationData.swift; sourceTree = "<group>"; };
 		1684699A1FC06A04002BA60B /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		169CDDD31FC1709A0050223B /* ShareTableTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareTableTableViewController.swift; sourceTree = "<group>"; };
 		16AF50901FB1751A00BA3194 /* GroupCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCreateViewController.swift; sourceTree = "<group>"; };
@@ -57,6 +64,7 @@
 		16B736B81FC86D9D0088EF71 /* SnapKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SnapKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		16B736B91FC873EA0088EF71 /* Chatviewcontroller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chatviewcontroller.swift; sourceTree = "<group>"; };
 		16B736BF1FC874FB0088EF71 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		16BA133C1FD058470071E603 /* GetGroupnameAndApply.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetGroupnameAndApply.swift; sourceTree = "<group>"; };
 		16DF80491FCC819100B2DEFC /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		16FA6C921FAC56F00016F254 /* MUJIN.ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MUJIN.ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		16FA6C951FAC56F00016F254 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -121,6 +129,7 @@
 				166FC64D1FC0105E006F8B94 /* LoginViewController.swift */,
 				16FA6C971FAC56F00016F254 /* ViewController.swift */,
 				16FA6C991FAC56F00016F254 /* Main.storyboard */,
+				1641F0EE1FD112CE0089B97B /* ModelViewController.swift */,
 				163661DD1FC9BB3C0011A645 /* RegisterViewController.swift */,
 				16B736B91FC873EA0088EF71 /* Chatviewcontroller.swift */,
 				16B736BF1FC874FB0088EF71 /* TableViewCell.swift */,
@@ -140,6 +149,9 @@
 				16FA6CB81FAECA0A0016F254 /* MUJIN.ios.entitlements */,
 				16AF509A1FB1B22F00BA3194 /* HomeViewController.swift */,
 				164A20C41FC17E0D0044B25F /* NoticeViewController.swift */,
+				167AE68C1FCE6BC9006597EE /* NoticeficationData.swift */,
+				16BA133C1FD058470071E603 /* GetGroupnameAndApply.swift */,
+				16774C0A1FD28E2E0096606E /* GetNotificationStatus.swift */,
 				164A20C61FC268FC0044B25F /* GroupData.swift */,
 			);
 			path = MUJIN.ios;
@@ -327,7 +339,10 @@
 			files = (
 				166FC64E1FC0105E006F8B94 /* LoginViewController.swift in Sources */,
 				16AF509B1FB1B22F00BA3194 /* HomeViewController.swift in Sources */,
+				167AE68D1FCE6BC9006597EE /* NoticeficationData.swift in Sources */,
 				16FA6CB21FAC67E70016F254 /* SecondViewController.swift in Sources */,
+				16BA133D1FD058470071E603 /* GetGroupnameAndApply.swift in Sources */,
+				1641F0EF1FD112CE0089B97B /* ModelViewController.swift in Sources */,
 				16DF804A1FCC819200B2DEFC /* Message.swift in Sources */,
 				1684699B1FC06A04002BA60B /* SettingViewController.swift in Sources */,
 				164135A31FC6968A00971794 /* CustomButton.swift in Sources */,
@@ -341,6 +356,7 @@
 				16FA6C961FAC56F00016F254 /* AppDelegate.swift in Sources */,
 				169CDDD41FC1709A0050223B /* ShareTableTableViewController.swift in Sources */,
 				16B736C01FC874FB0088EF71 /* TableViewCell.swift in Sources */,
+				16774C0B1FD28E2E0096606E /* GetNotificationStatus.swift in Sources */,
 				164A20C71FC268FC0044B25F /* GroupData.swift in Sources */,
 				16158CA31FC3F91600218A31 /* GroupViewController.swift in Sources */,
 			);

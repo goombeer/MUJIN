@@ -16,7 +16,7 @@ UICollectionViewDelegate ,UICollectionViewDelegateFlowLayout{
     var ref: DatabaseReference!
     var items = [GroupData]()
     let ud = UserDefaults.standard
-    let UID = UserDefaults.standard.string(forKey: "UID") 
+    let UID = UserDefaults.standard.string(forKey: "MyUID") 
     var selectedImage: UIImage?
     var selectedname: String?
     var selectedjoinnum: String?
@@ -68,6 +68,8 @@ UICollectionViewDelegate ,UICollectionViewDelegateFlowLayout{
         groupimage?.image = UIImage(named: "sinji.png")
         
         let namelabel = cell.contentView.viewWithTag(2) as? UILabel
+        namelabel?.font = UIFont(name: "Arial", size: 14)
+        namelabel?.font = UIFont.boldSystemFont(ofSize: 12)
         namelabel?.text = item.name!
         
         
@@ -103,8 +105,15 @@ UICollectionViewDelegate ,UICollectionViewDelegateFlowLayout{
         let amountlabel = cell.contentView.viewWithTag(4) as? UILabel
         self.selectedamount = amountlabel?.text!
         
+        //groupnameを登録
+        ud.set(item.name!, forKey: "tappedgroupname")
         //groupidを登録
         ud.set(item.groupid, forKey: "tappedgroupid")
+        //founder登録
+        ud.set(item.founder, forKey: "tappedfounder")
+        //登録
+        ud.synchronize()
+        
         performSegue(withIdentifier: "FromHome", sender: nil)
     }
     
