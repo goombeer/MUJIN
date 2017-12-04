@@ -86,7 +86,7 @@ class GroupViewController: UIViewController,UICollectionViewDelegate,UICollectio
         let amountlabel = cell.contentView.viewWithTag(4) as? UILabel
         amountlabel?.text = String(describing: item.memberofnumber! * item.payment!) + "円"
         
-        cell.layer.borderWidth = 1
+        cell.layer.borderWidth = 2
         cell.layer.cornerRadius = 6
         cell.layer.borderColor = UIColor(red:1.00, green:0.75, blue:0.51, alpha:1.0).cgColor
 

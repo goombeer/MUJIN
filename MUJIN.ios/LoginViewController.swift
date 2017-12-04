@@ -20,8 +20,25 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var emailFiled: UITextField!
     @IBOutlet weak var passfield: UITextField!
     
+    //インジゲーター実装
+    var ActivityIndicator: UIActivityIndicatorView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // ActivityIndicatorを作成＆中央に配置
+        ActivityIndicator = UIActivityIndicatorView()
+        ActivityIndicator.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+        ActivityIndicator.center = self.view.center
+        
+        // クルクルをストップした時に非表示する
+        ActivityIndicator.hidesWhenStopped = true
+        
+        // 色を設定
+        ActivityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        
+        //Viewに追加
+        self.view.addSubview(ActivityIndicator)
         
         if let nv = navigationController {
             let hidden = !nv.isNavigationBarHidden
@@ -38,6 +55,7 @@ class LoginViewController: UIViewController {
 
    
     @IBAction func logintap(_ sender: UIButton) {
+        ActivityIndicator.startAnimating()
         print("tap")
         let email = emailFiled.text
         let password = passfield.text
@@ -94,14 +112,17 @@ class LoginViewController: UIViewController {
                 self.array = newarray
                 self.ud.set(self.array, forKey: "notification")
                 print("通知取得終了")
-
+                
             }
-            
+            self.ud.set(self.user.uid, forKey: "MyUID")
+            self.ud.synchronize()
+        
+            self.ActivityIndicator.stopAnimating()
+        
+            self.performSegue(withIdentifier: "signIn", sender: nil)
+            self.emailFiled.text = ""
+            self.passfield.text  = ""
         })
-        self.ud.set(user.uid, forKey: "MyUID")
-        self.ud.synchronize()
-        performSegue(withIdentifier: "signIn", sender: nil)
-        emailFiled.text = ""
-        passfield.text  = ""
+       
     }
 }

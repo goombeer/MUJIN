@@ -23,8 +23,13 @@ class NoticeViewController: UIViewController,UITableViewDelegate,UITableViewData
     var selectedText: String?
     var selectedApplyid: String?
     var selectedGroupkey: String?
-
     
+    //pull to refreshのために必要なもの
+    var refreshControl:UIRefreshControl!
+    
+    //インジゲーター実装
+    var ActivityIndicator: UIActivityIndicatorView!
+
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
@@ -35,31 +40,29 @@ class NoticeViewController: UIViewController,UITableViewDelegate,UITableViewData
         tableView.delegate = self
         tableView.dataSource = self
         
-        if notifications != nil {
-            //重複分を避けるための前処理
-            let orderdset: NSOrderedSet = NSOrderedSet(array: notifications!)
-            let newnotifications = orderdset.array as! [String]
-            
-            var items = [GetGroupnameAndApply]()
-            
-            for i in newnotifications {
-                //statusが「unDone」のみを取得
-                self.ref.child("Notifications").child(i).queryOrdered(byChild:"status").queryEqual(toValue: "unDone").observeSingleEvent(of:.value, with: { (snapshot) in
-                    for child in snapshot.children {
-                        let item = GetGroupnameAndApply(snapshot: child as! DataSnapshot)
-                        items.append(item!)
-                    }
-                    self.dataset = items
-                    print(self.dataset)
-                    self.tableView.reloadData()
-                    
-                })
-            }
-        }
+        // ActivityIndicatorを作成＆中央に配置
+        ActivityIndicator = UIActivityIndicatorView()
+        ActivityIndicator.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+        ActivityIndicator.center = self.view.center
         
-       
+        // クルクルをストップした時に非表示する
+        ActivityIndicator.hidesWhenStopped = true
+        
+        // 色を設定
+        ActivityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        
+        //Viewに追加
+        self.tableView.addSubview(ActivityIndicator)
         
         
+        //pull to refreshに必要な実装
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl.attributedTitle = NSAttributedString(string: "")
+        self.refreshControl.addTarget(self, action: #selector(NoticeViewController.startgetnotification), for: UIControlEvents.valueChanged)
+        self.tableView.addSubview(refreshControl)
+        
+        startgetnotification()
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -121,4 +124,29 @@ class NoticeViewController: UIViewController,UITableViewDelegate,UITableViewData
         }
     }
     
+    @objc func startgetnotification() {
+        ActivityIndicator.startAnimating()
+        if notifications != nil {
+            //重複分を避けるための前処理
+            let orderdset: NSOrderedSet = NSOrderedSet(array: notifications!)
+            let newnotifications = orderdset.array as! [String]
+            
+            var items = [GetGroupnameAndApply]()
+            
+            for i in newnotifications {
+                //statusが「unDone」のみを取得
+                self.ref.child("Notifications").child(i).queryOrdered(byChild:"status").queryEqual(toValue: "unDone").observeSingleEvent(of:.value, with: { (snapshot) in
+                    for child in snapshot.children {
+                        let item = GetGroupnameAndApply(snapshot: child as! DataSnapshot)
+                        items.append(item!)
+                    }
+                    self.dataset = items
+                    self.tableView.reloadData()
+                    self.ActivityIndicator.stopAnimating()
+                    self.refreshControl.endRefreshing()
+                })
+            }
+        }
+
+    }
 }

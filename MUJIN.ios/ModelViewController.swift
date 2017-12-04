@@ -12,6 +12,8 @@ import Firebase
 class ModalViewController: UIViewController {
 
     @IBOutlet weak var textmessage: UILabel!
+    @IBOutlet weak var modalview: UIView!
+
     var message: String?
     //申請されたグループのキー
     var Groupkey:String?
@@ -21,6 +23,7 @@ class ModalViewController: UIViewController {
     var ref: DatabaseReference!
     //認証予定のidを取得
     var vertifyid: DatabaseReference!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +36,7 @@ class ModalViewController: UIViewController {
         textmessage.numberOfLines = 2
         textmessage.lineBreakMode = NSLineBreakMode.byWordWrapping
         
+        self.modalview.layer.cornerRadius = 10
         ref.child("Notifications").child(Groupkey!).queryOrdered(byChild: "status").queryEqual(toValue: "unDone").observe(DataEventType.value, with: { (snapshot)  in
             for child in snapshot.children {
                 let deta = GetNotificationStatus(snapshot: child as! DataSnapshot)

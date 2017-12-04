@@ -25,27 +25,23 @@ UICollectionViewDelegate ,UICollectionViewDelegateFlowLayout{
     
     @IBOutlet weak var collectionView: UICollectionView!
     
+    //pull to refreshのために必要なもの
+    var refreshControl:UIRefreshControl!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         collectionView.dataSource = self
         collectionView.delegate = self
         
+        getgroupdeta()
+
+        //pull to refreshに必要な実装
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl.attributedTitle = NSAttributedString(string: "")
+        self.refreshControl.addTarget(self, action: #selector(HomeViewController.getgroupdeta), for: UIControlEvents.valueChanged)
+        self.collectionView?.addSubview(refreshControl)
         
-        ref = Database.database().reference()
-        databaseHandle = ref.child("Gruop").observe(.value, with: { (snapshot) in
-            
-            var newItems = [GroupData]()
-            
-            for itemSnapShot in snapshot.children {
-                let item = GroupData(snapshot: itemSnapShot as! DataSnapshot)
-                if item?.publicnum == 1 {
-                    newItems.append(item!)
-                }
-            }
-                self.items = newItems
-                self.collectionView.reloadData()
-       })
         
     }
     
@@ -79,7 +75,7 @@ UICollectionViewDelegate ,UICollectionViewDelegateFlowLayout{
         let amountlabel = cell.contentView.viewWithTag(4) as? UILabel
         amountlabel?.text = String(describing: item.memberofnumber! * item.payment!) + "円"
         
-        cell.layer.borderWidth = 1
+        cell.layer.borderWidth = 2
         cell.layer.cornerRadius = 6
         cell.layer.borderColor = UIColor(red:1.00, green:0.75, blue:0.51, alpha:1.0).cgColor
 
@@ -134,5 +130,23 @@ UICollectionViewDelegate ,UICollectionViewDelegateFlowLayout{
             GDVC.amountlabel = selectedamount!
         }
     }
+    
+    @objc func getgroupdeta() {
+        ref = Database.database().reference()
+        databaseHandle = ref.child("Gruop").observe(.value, with: { (snapshot) in
+            
+            var newItems = [GroupData]()
+            
+            for itemSnapShot in snapshot.children {
+                let item = GroupData(snapshot: itemSnapShot as! DataSnapshot)
+                if item?.publicnum == 1 {
+                    newItems.append(item!)
+                }
+            }
+            self.items = newItems
+            self.collectionView.reloadData()
+            self.refreshControl.endRefreshing()
 
+        })
+    }
 }
