@@ -7,15 +7,19 @@ target 'MUJIN.ios' do
   pod 'Firebase/Database'
   pod 'Firebase/Auth'
   pod 'FirebaseUI/Database'
+  pod 'Firebase/Core'
+  pod 'Firebase/Storage'
 
   pod ‘FBSDKCoreKit’
   pod ‘FBSDKLoginKit’
   pod ‘FBSDKShareKit’
 
   pod ‘SDWebImage’
-  
+   
   pod "SlackTextViewController"
   pod 'SnapKit', '~> 4.0.0'
- # Pods for MUJIN.ios
+
+  pod 'RSKImageCropper' 
+# Pods for MUJIN.ios
 
 end
