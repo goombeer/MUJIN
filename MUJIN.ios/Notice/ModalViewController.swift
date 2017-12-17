@@ -8,12 +8,13 @@
 
 import UIKit
 import Firebase
+import SDWebImage
 
 class ModalViewController: UIViewController {
 
     @IBOutlet weak var textmessage: UILabel!
     @IBOutlet weak var modalview: UIView!
-
+    @IBOutlet weak var userimage: UIImageView!
     var message: String?
     //申請されたグループのキー
     var Groupkey:String?
@@ -24,11 +25,14 @@ class ModalViewController: UIViewController {
     //認証予定のidを取得
     var vertifyid: DatabaseReference!
     
+    //ユーザーの写真のURLを受け取り
+    var userprofile:String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         ref = Database.database().reference()
-
+        let profile = URL(string:userprofile as! String)
+        self.userimage.sd_setImage(with: profile)
         
         textmessage.text = message
         textmessage.font = UIFont(name: "Arial", size: 14)
@@ -71,7 +75,9 @@ class ModalViewController: UIViewController {
  
     @IBAction func tappedOK(_ sender: CustomButton) {
         ref = Database.database().reference()
-    ref.child("User").child(Applyid!).child("groups").updateChildValues([Groupkey!:true])
+        ref.child("User").child(Applyid!).child("groups").updateChildValues([Groupkey!:true])
+        ref.child("Gruop").child(Groupkey!).child("users").updateChildValues([Applyid!:true])
+
         vertifyid.updateChildValues(["status":"isDone"])
         dismiss(animated: true, completion: nil)
 

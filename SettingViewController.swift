@@ -8,20 +8,26 @@
 
 import UIKit
 import Firebase
+import RSKImageCropper
+import SDWebImage
 
 
-class SettingViewController: UIViewController,UITableViewDelegate,UITableViewDataSource,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
+class SettingViewController: UIViewController,UITableViewDelegate,UITableViewDataSource,UIImagePickerControllerDelegate,UINavigationControllerDelegate,RSKImageCropViewControllerDelegate {
     
     var user: User!
     var ref: DatabaseReference!
+    let userID = Auth.auth().currentUser?.uid
+    let Username = UserDefaults.standard.string(forKey: "Username")
+    let Myimage = UserDefaults.standard.url(forKey: "Myimage")
     let storage = Storage.storage()
-
+    let ud = UserDefaults.standard
     
     @IBOutlet weak var userimage: UIImageView!
-    
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var username: UILabel!
     
     let imageset:[UIImage] = [
-        (UIImage(named:"facebook.png")?.resize(size: CGSize(width:40, height:30))!.withRenderingMode(.alwaysTemplate))!,
+        (UIImage(named:"facebook.png")?.resize(size: CGSize(width:30, height:30))!.withRenderingMode(.alwaysTemplate))!,
         (UIImage(named:"cash.png")?.resize(size: CGSize(width:30, height:30))!.withRenderingMode(.alwaysTemplate))!,
         (UIImage(named:"card.png")?.resize(size: CGSize(width:30, height:30))!.withRenderingMode(.alwaysTemplate))!,
         (UIImage(named:"logout.png")?.resize(size: CGSize(width:30, height:30))!.withRenderingMode(.alwaysTemplate))!,
@@ -29,28 +35,20 @@ class SettingViewController: UIViewController,UITableViewDelegate,UITableViewDat
     
     let textset:[String] = ["facebook連携","振込申請","クレジットカード登録","ログアウト"]
 
-    @IBOutlet weak var tableView: UITableView!
-    
-    @IBOutlet weak var username: UILabel!
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        ref = Database.database().reference()
-        let userID = Auth.auth().currentUser?.uid
-        ref.child("User").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
-            let value = snapshot.value as? NSDictionary
-            let Username = value?["username"] as? String ?? ""
-            self.username.text = Username
+        print(Myimage)
+        self.userimage.sd_setImage(with: Myimage)
+        self.username.text = Username
 
-        }) { (error) in
-            print(error.localizedDescription)
-        }
-        
-        
+
         tableView.isScrollEnabled = false
         tableView.delegate = self
         tableView.dataSource = self
-        
+        tableView.tableFooterView = UIView(frame: CGRect.zero)
+        tableView.contentInset = UIEdgeInsets(top: 30, left: 0, bottom: 0, right: 0)
         //userimageにタップ処理を加える
         userimage.isUserInteractionEnabled = true
         let myTap:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: Selector("userimagetapped"))
@@ -75,6 +73,7 @@ class SettingViewController: UIViewController,UITableViewDelegate,UITableViewDat
         let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
         cell.textLabel?.text = cellText
         cell.imageView?.image = cellImage
+        cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
         
         if cellText == "facebook連携" {
             cell.imageView?.tintColor = UIColor(red:0.23, green:0.35, blue:0.60, alpha:1.0)
@@ -154,20 +153,56 @@ class SettingViewController: UIViewController,UITableViewDelegate,UITableViewDat
     func imagePickerController(_ imagePicker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [String : Any]) {
         
-        if let pickedImage = info[UIImagePickerControllerOriginalImage]
-            as? UIImage {
-            
-            userimage.contentMode = .scaleAspectFit
-            let imgRef = pickedImage.cgImage?.cropping(to: CGRect(x: view.bounds.size.width/2, y: view.bounds.size.height/2, width: 10.0, height: 10.0))
-            let image = UIImage(cgImage: imgRef!, scale: pickedImage.scale, orientation: pickedImage.imageOrientation)
-            userimage.image = image
-            self.userimage.layer.cornerRadius = 75
-        }
+        let image : UIImage = (info[UIImagePickerControllerOriginalImage] as? UIImage)!
         
-        //閉じる処理
-        imagePicker.dismiss(animated: true, completion: nil)
+        imagePicker.dismiss(animated: false, completion: { () -> Void in
+            
+            var imageCropVC : RSKImageCropViewController!
+            
+            imageCropVC = RSKImageCropViewController(image: image, cropMode: RSKImageCropMode.circle)
+            
+            imageCropVC.moveAndScaleLabel.text = "切り取り範囲を選択"
+            imageCropVC.cancelButton.setTitle("キャンセル", for: .normal)
+            imageCropVC.chooseButton.setTitle("完了", for: .normal)
+            imageCropVC.delegate = self
+            
+            self.present(imageCropVC, animated: true)
+            
+        })
+        
         
     }
+    
+    func imageCropViewController(_ controller: RSKImageCropViewController, didCropImage croppedImage: UIImage, usingCropRect cropRect: CGRect, rotationAngle: CGFloat) {
+        
+        
+        //もし円形で画像を切り取りし、その画像自体を加工などで利用したい場合
+        if controller.cropMode == .circle {
+            UIGraphicsBeginImageContext(croppedImage.size)
+            let layerView = UIImageView(image: croppedImage)
+            layerView.frame.size = croppedImage.size
+            layerView.layer.cornerRadius = layerView.frame.size.width * 0.5
+            layerView.clipsToBounds = true
+            let context = UIGraphicsGetCurrentContext()!
+            layerView.layer.render(in: context)
+            let capturedImage = UIGraphicsGetImageFromCurrentImageContext()!
+            UIGraphicsEndImageContext()
+            let pngData = UIImagePNGRepresentation(capturedImage)!
+            //このImageは円形で余白は透過です。
+            let png = UIImage(data: pngData)!
+            userimage.image = png
+            
+            fileupload(deta: png)
+            dismiss(animated: true, completion: nil)
+            
+        }
+    }
+    
+    //トリミング画面でキャンセルを押した時
+    func imageCropViewControllerDidCancelCrop(_ controller: RSKImageCropViewController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
     
     // 撮影がキャンセルされた時に呼ばれる
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -184,7 +219,6 @@ class SettingViewController: UIViewController,UITableViewDelegate,UITableViewDat
             let cameraPicker = UIImagePickerController()
             cameraPicker.sourceType = sourceType
             cameraPicker.delegate = self
-            cameraPicker.allowsEditing = true
             self.present(cameraPicker, animated: true, completion: nil)
             
         }
@@ -203,7 +237,6 @@ class SettingViewController: UIViewController,UITableViewDelegate,UITableViewDat
             let cameraPicker = UIImagePickerController()
             cameraPicker.sourceType = sourceType
             cameraPicker.delegate = self
-            cameraPicker.allowsEditing = true
             self.present(cameraPicker, animated: true, completion: nil)
             
         }
@@ -212,5 +245,30 @@ class SettingViewController: UIViewController,UITableViewDelegate,UITableViewDat
             
         }
     }
+    
+    func fileupload(deta: UIImage) {
+        //保存するURLを指定
+        let storageRef = storage.reference(forURL: "gs://mujin-3285a.appspot.com")
+        //ディレクトリを指定
+        let imageRef = storageRef.child("User").child(Username!)
+        //保存を実行して、metadataにURLが含まれているので、あとはよしなに加工
+        let imageData = UIImageJPEGRepresentation(deta, 1.0)!
+        imageRef.putData(imageData, metadata: nil) { metadata, error in
+            if (error != nil) {
+                print("Uh-oh, an error occurred!")
+            } else {
+                //URL型をNSstring型に変更
+                let downloadURL = metadata!.downloadURL()
+                //差し替えた画像をしっかりと保存
+                self.ud.set(downloadURL, forKey: "Myimage")
+                self.ud.synchronize()
+                
+                let deta = downloadURL?.absoluteString
+                self.ref = Database.database().reference()
+                self.ref.child("User").child(self.userID!).updateChildValues(["profile":deta])
+                print("成功！")
+            }
+        }
+   }
     
 }

@@ -23,7 +23,7 @@ class NoticeViewController: UIViewController,UITableViewDelegate,UITableViewData
     var selectedText: String?
     var selectedApplyid: String?
     var selectedGroupkey: String?
-    
+    var selectedUserimage: String?
     //pull to refreshのために必要なもの
     var refreshControl:UIRefreshControl!
     
@@ -40,19 +40,26 @@ class NoticeViewController: UIViewController,UITableViewDelegate,UITableViewData
         tableView.delegate = self
         tableView.dataSource = self
         
-        // ActivityIndicatorを作成＆中央に配置
-        ActivityIndicator = UIActivityIndicatorView()
-        ActivityIndicator.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
-        ActivityIndicator.center = self.view.center
-        
-        // クルクルをストップした時に非表示する
-        ActivityIndicator.hidesWhenStopped = true
-        
-        // 色を設定
-        ActivityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
-        
-        //Viewに追加
-        self.tableView.addSubview(ActivityIndicator)
+        if notifications == nil {
+            return
+
+        } else {
+
+            ActivityIndicator = UIActivityIndicatorView()
+            ActivityIndicator.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+            ActivityIndicator.center = self.view.center
+            
+            // クルクルをストップした時に非表示する
+            ActivityIndicator.hidesWhenStopped = true
+            
+            // 色を設定
+            ActivityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+            
+            //Viewに追加
+            self.tableView.addSubview(ActivityIndicator)
+            
+            startgetnotification()
+        }
         
         
         //pull to refreshに必要な実装
@@ -61,7 +68,6 @@ class NoticeViewController: UIViewController,UITableViewDelegate,UITableViewData
         self.refreshControl.addTarget(self, action: #selector(NoticeViewController.startgetnotification), for: UIControlEvents.valueChanged)
         self.tableView.addSubview(refreshControl)
         
-        startgetnotification()
 
     }
 
@@ -91,7 +97,8 @@ class NoticeViewController: UIViewController,UITableViewDelegate,UITableViewData
         cell.imageView?.tintColor = UIColor(red:0.96, green:0.55, blue:0.15, alpha:1.0)
         cell.imageView?.image = cellImage
         
-        
+        cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+
         return cell
     }
     
@@ -102,6 +109,8 @@ class NoticeViewController: UIViewController,UITableViewDelegate,UITableViewData
         selectedApplyid = dataset[indexPath.row].Applyid
         //タップしたセルのGroupkeyを取得してる
         selectedGroupkey = dataset[indexPath.row].Groupkey
+        //タップしたセルのuserprofileを取得してる
+        selectedUserimage = dataset[indexPath.row].userprofile
         //タップした直後にセルのハイライトを消している
         tableView.deselectRow(at: indexPath, animated: true)
         performSegue(withIdentifier: "Modal", sender: nil)
@@ -118,6 +127,7 @@ class NoticeViewController: UIViewController,UITableViewDelegate,UITableViewData
             ModalVC.message = self.selectedText!
             ModalVC.Groupkey = self.selectedGroupkey!
             ModalVC.Applyid = self.selectedApplyid!
+            ModalVC.userprofile = self.selectedUserimage!
 
             ModalVC.modalPresentationStyle = .overCurrentContext
             ModalVC.view.backgroundColor = UIColor(red:0.37, green:0.37, blue:0.37, alpha:0.5)
@@ -125,20 +135,34 @@ class NoticeViewController: UIViewController,UITableViewDelegate,UITableViewData
     }
     
     @objc func startgetnotification() {
-        ActivityIndicator.startAnimating()
-        if notifications != nil {
+        if notifications == nil {
+            return
+        } else{
+            print("なぜこっち")
+//            self.refreshControl.endRefreshing()
+            ActivityIndicator.startAnimating()
             //重複分を避けるための前処理
             let orderdset: NSOrderedSet = NSOrderedSet(array: notifications!)
             let newnotifications = orderdset.array as! [String]
             
+
             var items = [GetGroupnameAndApply]()
             
             for i in newnotifications {
+
                 //statusが「unDone」のみを取得
                 self.ref.child("Notifications").child(i).queryOrdered(byChild:"status").queryEqual(toValue: "unDone").observeSingleEvent(of:.value, with: { (snapshot) in
                     for child in snapshot.children {
                         let item = GetGroupnameAndApply(snapshot: child as! DataSnapshot)
-                        items.append(item!)
+                       
+
+                        //オプショナルバインディングするぞ
+                        if let data = item {
+                            items.append(data)
+                        } else {
+                            self.refreshControl.endRefreshing()
+                            return
+                        }
                     }
                     self.dataset = items
                     self.tableView.reloadData()
@@ -146,6 +170,7 @@ class NoticeViewController: UIViewController,UITableViewDelegate,UITableViewData
                     self.refreshControl.endRefreshing()
                 })
             }
+            
         }
 
     }

@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import RSKImageCropper
 
 extension UITextField {
     func addBorderBottom(height: CGFloat, color: UIColor) {
@@ -18,7 +19,7 @@ extension UITextField {
     }
 }
 
-class TestViewController: UIViewController,UITextFieldDelegate, UITextViewDelegate, UIImagePickerControllerDelegate,UINavigationControllerDelegate{
+class TestViewController: UIViewController,UITextFieldDelegate, UITextViewDelegate, UIImagePickerControllerDelegate,UINavigationControllerDelegate,RSKImageCropViewControllerDelegate{
     
     var ref: DatabaseReference!
     let user = UserDefaults.standard.string(forKey: "MyUID")
@@ -28,12 +29,15 @@ class TestViewController: UIViewController,UITextFieldDelegate, UITextViewDelega
     var memberofnumber: Int = 0
     var period: String = ""
     var publicnum: Int = 0
+    var takenphoto: UIImage = UIImage()
     
     //Buttonの紐付け
     @IBOutlet weak var groupnamefield: UITextField!
     @IBOutlet weak var messagefield: UITextField!
 
     @IBOutlet weak var scrollview: UIScrollView!
+    
+    @IBOutlet var numbercollection: [CustomButton]!
     
     @IBOutlet weak var number4button: CustomButton!
     @IBOutlet weak var number5button: CustomButton!
@@ -61,6 +65,11 @@ class TestViewController: UIViewController,UITextFieldDelegate, UITextViewDelega
         
         groupnamefield.delegate = self
         messagefield.delegate = self
+        
+        //ナビゲーションボタン
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "閉じる", style: .plain, target: nil, action: nil)
+        navigationItem.backBarButtonItem?.tintColor = UIColor.white
+      
         
         let ToolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 320, height: 40))
         ToolBar.barStyle = UIBarStyle.default  // スタイルを設定
@@ -173,14 +182,8 @@ class TestViewController: UIViewController,UITextFieldDelegate, UITextViewDelega
 
     }
     @IBAction func sharetapped(_ sender: CustomButton) {
-        ref = Database.database().reference()
-        let GroupId = ref.child("Group").childByAutoId().key
-        let groupname = groupnamefield.text
-        let message = messagefield.text
-        
-    self.ref.child("Gruop").child(GroupId).setValue(["payment":payment,"memberofnumber":memberofnumber,"period":period,"founder":(self.user)!,"name":groupname!,"message":message!,"publicnum":self.publicnum])
-        
-    self.ref.child("User").child(self.user!).child("groups").updateChildValues([GroupId:true])
+        savegroupdata(deta: self.takenphoto)
+        performSegue(withIdentifier: "GotoShare", sender: nil)
     }
     
     //画面遷移するかの判定処理
@@ -228,7 +231,10 @@ class TestViewController: UIViewController,UITextFieldDelegate, UITextViewDelega
                     }
                 }
             }
+            
         }
+        
+        
         return true;
     }
     
@@ -271,19 +277,56 @@ class TestViewController: UIViewController,UITextFieldDelegate, UITextViewDelega
     func imagePickerController(_ imagePicker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [String : Any]) {
         
-        if let pickedImage = info[UIImagePickerControllerOriginalImage]
-            as? UIImage {
-            
-            cameratap.contentMode = .scaleAspectFit
-            cameratap.setBackgroundImage(pickedImage, for: UIControlState())
-            cameratap.setTitle("", for: .normal)
-            
-        }
+        let image : UIImage = (info[UIImagePickerControllerOriginalImage] as? UIImage)!
         
-        //閉じる処理
-        imagePicker.dismiss(animated: true, completion: nil)
+        imagePicker.dismiss(animated: false, completion: { () -> Void in
+            
+            var imageCropVC : RSKImageCropViewController!
+            
+            imageCropVC = RSKImageCropViewController(image: image, cropMode: RSKImageCropMode.circle)
+            
+            imageCropVC.moveAndScaleLabel.text = "切り取り範囲を選択"
+            imageCropVC.cancelButton.setTitle("キャンセル", for: .normal)
+            imageCropVC.chooseButton.setTitle("完了", for: .normal)
+            imageCropVC.delegate = self
+            
+            self.present(imageCropVC, animated: true)
+            
+        })
+        
         
     }
+    
+    func imageCropViewController(_ controller: RSKImageCropViewController, didCropImage croppedImage: UIImage, usingCropRect cropRect: CGRect, rotationAngle: CGFloat) {
+        
+        
+        //もし円形で画像を切り取りし、その画像自体を加工などで利用したい場合
+        if controller.cropMode == .circle {
+            UIGraphicsBeginImageContext(croppedImage.size)
+            let layerView = UIImageView(image: croppedImage)
+            layerView.frame.size = croppedImage.size
+            layerView.layer.cornerRadius = layerView.frame.size.width * 0.5
+            layerView.clipsToBounds = true
+            let context = UIGraphicsGetCurrentContext()!
+            layerView.layer.render(in: context)
+            let capturedImage = UIGraphicsGetImageFromCurrentImageContext()!
+            UIGraphicsEndImageContext()
+            let pngData = UIImagePNGRepresentation(capturedImage)!
+            //このImageは円形で余白は透過です。
+            let png = UIImage(data: pngData)!
+            self.takenphoto = png
+            cameratap.setBackgroundImage(png, for: .normal)
+            cameratap.setTitle("", for: .normal)
+            dismiss(animated: true, completion: nil)
+            
+        }
+    }
+    
+    //トリミング画面でキャンセルを押した時
+    func imageCropViewControllerDidCancelCrop(_ controller: RSKImageCropViewController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
     
     // 撮影がキャンセルされた時に呼ばれる
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -300,7 +343,6 @@ class TestViewController: UIViewController,UITextFieldDelegate, UITextViewDelega
             let cameraPicker = UIImagePickerController()
             cameraPicker.sourceType = sourceType
             cameraPicker.delegate = self
-            cameraPicker.allowsEditing = true
             self.present(cameraPicker, animated: true, completion: nil)
             
         }
@@ -319,13 +361,12 @@ class TestViewController: UIViewController,UITextFieldDelegate, UITextViewDelega
             let cameraPicker = UIImagePickerController()
             cameraPicker.sourceType = sourceType
             cameraPicker.delegate = self
-            cameraPicker.allowsEditing = true
             self.present(cameraPicker, animated: true, completion: nil)
             
         }
         else{
             print("error")
-
+            
         }
     }
     
@@ -343,9 +384,39 @@ class TestViewController: UIViewController,UITextFieldDelegate, UITextViewDelega
         button.setTitleColor(UIColor(red:0.96, green:0.55, blue:0.15, alpha:1.0), for: .normal)
     }
     
-//    func uploadimage() {
-//        let storageRef = storage.reference()
-//        storageRef.child("User")
-//    }
+    func savegroupdata(deta: UIImage) {
+        self.ref = Database.database().reference()
+
+        let GroupId = self.ref.child("Group").childByAutoId().key
+        let groupname = self.groupnamefield.text
+        let message = self.messagefield.text
+        //保存するURLを指定
+        let storageRef = storage.reference(forURL: "gs://mujin-3285a.appspot.com")
+        //ディレクトリを指定
+        let imageRef = storageRef.child("Group").child(GroupId)
+        
+        //保存を実行して、metadataにURLが含まれているので、あとはよしなに加工
+        let imageData = UIImageJPEGRepresentation(deta, 1.0)!
+        imageRef.putData(imageData, metadata: nil) { metadata, error in
+            if (error != nil) {
+                print("Uh-oh, an error occurred!")
+            } else {
+                //URL型をNSstring型に変更
+                let downloadURL = metadata!.downloadURL()
+                
+                let deta = downloadURL?.absoluteString
+               
+               
+            self.ref.child("Gruop").child(GroupId).setValue(["payment":self.payment,"memberofnumber":self.memberofnumber,"period":self.period,"founder":(self.user)!,"name":groupname!,"message":message!,"publicnum":self.publicnum,"groupprofile":deta])
+                
+                    self.ref.child("Gruop").child(GroupId).child("users").setValue([(self.user)!:true])
+                
+                    self.ref.child("User").child(self.user!).child("groups").updateChildValues([GroupId:true])
+                
+            }
+        }
+
+    }
+   
   }
 

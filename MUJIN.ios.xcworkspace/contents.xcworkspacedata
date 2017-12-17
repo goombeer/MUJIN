@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:/Users/takahashiyuuki/Desktop/MUJIN.ios/MUJIN.ios/Group/SlideViewController.swift">
+   </FileRef>
+   <FileRef
       location = "group:MUJIN.ios.xcodeproj">
    </FileRef>
    <FileRef

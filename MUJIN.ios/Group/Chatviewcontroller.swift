@@ -16,6 +16,8 @@ class ChatViewController: SLKTextViewController {
     var groupname:String = ""
     var messages = [Message]()
     let username = UserDefaults.standard.string(forKey: "Username")
+    let Myimage = UserDefaults.standard.url(forKey: "Myimage")
+
     let user = UserDefaults.standard.string(forKey: "MyUID")
     let groupid = UserDefaults.standard.string(forKey: "tappedgroupid")
     var ref = Database.database().reference()
@@ -31,28 +33,24 @@ class ChatViewController: SLKTextViewController {
         
         self.navigationItem.title = groupname
         self.textView.placeholder = "メッセージを入力してください";
-        
         if let tableView = self.tableView {
             tableView.separatorStyle = .none
             tableView.register(TableViewCell.classForCoder(),forCellReuseIdentifier: "cell")
             tableView.rowHeight = UITableViewAutomaticDimension
-            tableView.estimatedRowHeight = 2
+            tableView.estimatedRowHeight = 100
         }
         
         // NSNotification
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(ChatViewController.noticeReceived),
                                                name: NSNotification.Name(rawValue: "notireceived"), object: nil)
-        self.tableView?.reloadData()
-        self.tableView!.sectionHeaderHeight = 300
+
         
         startObservingDatabase ()
     }
     
    
-    //↓この処理を書いたらテキストフォームが隠れるようになってしまった。ライブラリーの何かを上書きしたみたいで、テキストフォームが動かなくなった
-//    override func viewDidAppear(_ animated: Bool) {
-//    }
+    
     @objc func noticeReceived() {
         
     }
@@ -61,16 +59,25 @@ class ChatViewController: SLKTextViewController {
         super.didReceiveMemoryWarning()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        automaticallyAdjustsScrollViewInsets = false
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         ref.child("Messages").child(groupid!).removeAllObservers()
     }
     
+   
+    
+    
     func addMessage(name: String,msg: String,right: Bool = true) {
-        ref.child("Messages").child(groupid!).childByAutoId().setValue(["sender":username,"text":msg,"time":ServerValue.timestamp()])
+        
+        ref.child("Messages").child(groupid!).childByAutoId().setValue(["sender":username,"text":msg,"time":ServerValue.timestamp(),"profile":Myimage?.absoluteString])
         
 
     }
+    
     
     func startObservingDatabase () {
 
@@ -109,22 +116,20 @@ class ChatViewController: SLKTextViewController {
         let m = messages[indexPath.row]
         cell.name.text = m.sendername
         cell.comment.text = m.text
+        cell.timelabel.text = m.time as! String
+        cell.userprofile.sd_setImage(with: URL(string:m.userprofile))
         cell.comment.numberOfLines = 0
         cell.transform = self.tableView!.transform
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        
+   
+
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
     }
     
-    @IBAction func gobacktapped(_ sender: UIBarButtonItem) {
-        let ud = UserDefaults.standard
-        ud.removeObject(forKey: "tappedgroupid")
-        ud.removeObject(forKey: "tappedfounder")
 
-        self.dismiss(animated: true)
-    }
     
     
 }

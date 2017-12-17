@@ -1,67 +1,79 @@
 //
-//  HomeViewController.swift
+//  GrounpViewController.swift
 //  MUJIN.ios
 //
-//  Created by 高橋勇輝 on 2017/11/07.
+//  Created by 高橋勇輝 on 2017/11/21.
 //  Copyright © 2017年 高橋勇輝. All rights reserved.
 //
 
 import UIKit
 import Firebase
 import FirebaseDatabase
+import SDWebImage
 
-class HomeViewController: UIViewController,UICollectionViewDataSource,
-UICollectionViewDelegate ,UICollectionViewDelegateFlowLayout{
 
+class GroupViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource {
+    
+    @IBOutlet weak var collectionView: UICollectionView!
+    
     var ref: DatabaseReference!
     var items = [GroupData]()
-    let ud = UserDefaults.standard
-    let UID = UserDefaults.standard.string(forKey: "MyUID") 
     var selectedImage: UIImage?
     var selectedname: String?
     var selectedjoinnum: String?
     var selectedamount: String?
-    private var databaseHandle: DatabaseHandle!
-    
-    @IBOutlet weak var collectionView: UICollectionView!
-    
-    //pull to refreshのために必要なもの
-    var refreshControl:UIRefreshControl!
+    let ud = UserDefaults.standard
+    let UID = UserDefaults.standard.string(forKey: "MyUID")
+    var joingroupid: Array<String>  = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let backButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationItem.backBarButtonItem = backButtonItem
+        
         collectionView.dataSource = self
         collectionView.delegate = self
         
-        getgroupdeta()
+        //データベースから取得
+        //自分が参加しているグループのID取得
+   
+        ref = Database.database().reference()
 
-        //pull to refreshに必要な実装
-        self.refreshControl = UIRefreshControl()
-        self.refreshControl.attributedTitle = NSAttributedString(string: "")
-        self.refreshControl.addTarget(self, action: #selector(HomeViewController.getgroupdeta), for: UIControlEvents.valueChanged)
-        self.collectionView?.addSubview(refreshControl)
-        
+        ref.child("User").child(self.UID!).child("groups").observeSingleEvent(of: .value, with: { (snapshot) in
+            let array = snapshot.value as? [String:AnyObject]
+            let GroupID = array?.keys
+            if GroupID == nil {
+                return
+            }
+            
+            for GroupKeys in GroupID! {
+                    self.joingroupid.append(GroupKeys)
+                }
+            //こっちでfor文回したら直った
+            for grouoid in self.joingroupid {
+                self.getgroup(GroupKey: grouoid)
+            }
+
+            })
         
     }
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
-    {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return items.count
     }
     
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
-    {
-        let cell:UICollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "homecell", for: indexPath as IndexPath)
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell:UICollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "groupcell", for: indexPath as IndexPath)
         let item = items[indexPath.row]
         
         let groupimage = cell.contentView.viewWithTag(1) as? UIImageView
-        groupimage?.image = UIImage(named: "sinji.png")
+        let profile = URL(string:item.groupprofile as! String)
+        groupimage?.sd_setImage(with: profile)
         
         let namelabel = cell.contentView.viewWithTag(2) as? UILabel
         namelabel?.font = UIFont(name: "Arial", size: 14)
@@ -75,6 +87,9 @@ UICollectionViewDelegate ,UICollectionViewDelegateFlowLayout{
         let amountlabel = cell.contentView.viewWithTag(4) as? UILabel
         amountlabel?.text = String(describing: item.memberofnumber! * item.payment!) + "円"
         
+        let periodlabel = cell.contentView.viewWithTag(5) as? UILabel
+        periodlabel?.text = item.period
+        
         cell.layer.borderWidth = 2
         cell.layer.cornerRadius = 6
         cell.layer.borderColor = UIColor(red:1.00, green:0.75, blue:0.51, alpha:1.0).cgColor
@@ -85,7 +100,7 @@ UICollectionViewDelegate ,UICollectionViewDelegateFlowLayout{
     //セルタップした時のイベント処理
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = items[indexPath.row]
-        
+
         //セルの取得
         let cell:UICollectionViewCell = collectionView.cellForItem(at: indexPath)!
         //選択された画像
@@ -110,43 +125,50 @@ UICollectionViewDelegate ,UICollectionViewDelegateFlowLayout{
         //登録
         ud.synchronize()
         
-        performSegue(withIdentifier: "FromHome", sender: nil)
+        performSegue(withIdentifier: "FromGroup", sender: nil)
     }
     
     // Segue 準備
     override func prepare(for segue: UIStoryboardSegue, sender: Any!) {
-        if (segue.identifier == "FromHome") {
+        if (segue.identifier == "FromGroup") {
             guard let nav = segue.destination as? UINavigationController else {
                 return
             }
-            guard let GDVC = nav.topViewController as? GroupDetailViewController else {
+            
+            guard let SlideVC = nav.topViewController as? SlideViewController else {
                 return
             }
-            
-            // SubViewController のselectedImgに選択された画像を設定する
-            GDVC.groupimage = selectedImage!
-            GDVC.namelabel = selectedname!
-            GDVC.joinnumber = selectedjoinnum!
-            GDVC.amountlabel = selectedamount!
+        
+
+            if let image = selectedImage, let name = selectedname, let join = selectedjoinnum, let amount = selectedamount  {
+                // SubViewController のselectedImgに選択された画像を設定する
+              
+                
+                SlideVC.joinnumber = join
+                SlideVC.amountlabel = amount
+                SlideVC.groupimage = image
+            }
         }
     }
     
-    @objc func getgroupdeta() {
-        ref = Database.database().reference()
-        databaseHandle = ref.child("Gruop").observe(.value, with: { (snapshot) in
-            
-            var newItems = [GroupData]()
-            
-            for itemSnapShot in snapshot.children {
-                let item = GroupData(snapshot: itemSnapShot as! DataSnapshot)
-                if item?.publicnum == 1 {
-                    newItems.append(item!)
-                }
-            }
-            self.items = newItems
-            self.collectionView.reloadData()
-            self.refreshControl.endRefreshing()
+    
+    
+    func getgroup(GroupKey:String){
+        if GroupKey == nil {
+            return
+        } else {
+            self.ref.child("Gruop").child(GroupKey).observe(.value, with: { (snapshot) in
+                let item = GroupData(snapshot: snapshot )
+                self.items.append(item!)
+                self.collectionView.reloadData()
+                
+            })
+        }
+        
 
-        })
     }
+    
+
 }
+
+

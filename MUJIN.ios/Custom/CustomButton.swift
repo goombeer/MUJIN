@@ -27,4 +27,15 @@ import UIKit
             super.draw(rect)
         }
 
+    func turnOn() {
+        self.setTitleColor(UIColor.white, for: .normal)
+        self.backgroundColor = UIColor(red:0.96, green:0.55, blue:0.15, alpha:1.0)
+    }
+    
+    func turnOff() {
+        self.setTitleColor(UIColor(red:0.96, green:0.55, blue:0.15, alpha:1.0), for: .normal)
+        self.backgroundColor = UIColor.white
+    }
 }
+
+

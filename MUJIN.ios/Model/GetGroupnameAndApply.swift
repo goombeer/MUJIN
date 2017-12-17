@@ -17,7 +17,8 @@ class GetGroupnameAndApply {
     var from: String?
     var Groupkey: String?
     var Applyid: String?
-    
+    var userprofile: String?
+
     
     init? (snapshot: DataSnapshot) {
         ref = snapshot.ref
@@ -27,13 +28,14 @@ class GetGroupnameAndApply {
         guard let status = dict["status"] as? String  else { return nil }
         guard let Groupkey  = dict["Groupkey"] as? String  else { return nil }
         guard let Applyid = dict["Applyid"] as? String  else { return nil }
-        
+        guard let userprofile = dict["userprofile"] as? String else { return nil }
+
         self.groupname = groupname
         self.status = status
         self.from = from
         self.Groupkey = Groupkey
         self.Applyid = Applyid
-        
+        self.userprofile = userprofile
         
     }
     

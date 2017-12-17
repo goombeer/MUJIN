@@ -9,7 +9,7 @@
 import Foundation
 import FirebaseDatabase
 
-class GroupData {
+class GroupData: NSObject {
     
     var ref: DatabaseReference?
     var groupid: String?
@@ -19,9 +19,10 @@ class GroupData {
     var payment: Int?
     var period: String?
     var message: String?
-    var publicnum: Int
+    var publicnum: Int?
+    var groupprofile: String?
+    var users : Array? = []
     
-   
     init? (snapshot: DataSnapshot) {
         ref = snapshot.ref
         guard let dict = snapshot.value as? [String:Any] else { return nil }
@@ -33,6 +34,15 @@ class GroupData {
         guard let period = dict["period"]  as? String else { return nil }
         guard let message = dict["message"] as? String else { return nil }
         guard let publicnum = dict["publicnum"] as? Int else { return nil }
+        guard let groupprofile = dict["groupprofile"] as? String else { return nil }
+         guard let users = dict["users"] as? [String:AnyObject] else { return nil }
+        var newusers : Array? = []
+
+        for i in users.keys {
+            newusers?.append(i)
+        }
+        
+       
         
         self.name = name
         self.groupid = groupid
@@ -42,8 +52,12 @@ class GroupData {
         self.period = period
         self.message = message
         self.publicnum = publicnum
-        
-      
+        self.groupprofile = groupprofile
+        self.users = newusers
+       
+
     }
     
 }
+
+

@@ -97,8 +97,10 @@ class LoginViewController: UIViewController {
 
         self.ref.child("User").child(user.uid).observe(.value, with: { (snapshot) in
             let username = snapshot.value as? [String:Any]
+            self.ud.set(username!["profile"], forKey: "Myprofile")
             self.ud.set(username!["username"], forKey: "Username")
-
+            print(username!["profile"])
+            self.ud.set(URL(string:username!["profile"] as! String), forKey: "Myimage")
         
         })
         
@@ -110,9 +112,9 @@ class LoginViewController: UIViewController {
                 let item = NoticeficationData(snapshot: child as! DataSnapshot)
                 newarray.append((item?.groupid)!)
                 self.array = newarray
+                print(self.array)
                 self.ud.set(self.array, forKey: "notification")
                 print("通知取得終了")
-                
             }
             self.ud.set(self.user.uid, forKey: "MyUID")
             self.ud.synchronize()

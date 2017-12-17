@@ -14,6 +14,7 @@ class Message {
     var text: String = ""
     var sendername: String = ""
     var time: Any
+    var userprofile: String = ""
     let dateFormatter = DateFormatter()
     
     init? (snapshot: DataSnapshot) {
@@ -23,7 +24,7 @@ class Message {
         guard let text  = dict["text"] as? String  else { return nil }
         guard let sendername  = dict["sender"] as? String  else { return nil }
         guard let time  = dict["time"] as? TimeInterval  else { return nil }
-        
+        guard let userprofile  = dict["profile"] as? String  else { return nil }
         
         self.text = text
         self.sendername = sendername
@@ -32,6 +33,6 @@ class Message {
         dateFormatter.locale = NSLocale.current
         dateFormatter.dateFormat = "yyyy.MM.dd hh:mm"
         self.time = dateFormatter.string(from: date as Date)
-        print(self.time)
+        self.userprofile = userprofile
     }
 }
